@@ -29,10 +29,33 @@ $client = array(
 	'vat' => 'BE 0829.564.289'
 );
 
+$invoice = array(
+	'client_id' => 2292,
+	'items' => array(
+		array(
+			'description' => 'foo',
+			'price' => 123.45,
+			'amount' => 67,
+			'vat' => 21
+		),
+		array(
+			'description' => 'bar',
+			'price' => 543.21,
+			'amount' => 76,
+			'vat' => 6
+		)
+	)
+);
+
 // $response = $factr->clients();
 // $response = $factr->clientsGet(1384);
 // $response = $factr->clientsCreate($client);
-
+// $response = $factr->invoices();
+// $response = $factr->invoicesGet(5258);
+// $response = $factr->invoicesGetByIid('IV08004');
+// $response = $factr->invoicesCreate($invoice);
+// $response = $factr->invoiceSendByMail(5261, 'foo@bar.com');
+// $response = $factr->invoicesAddPayment(5261, 123.45);
 
 // output (Spoon::dump())
 ob_start();

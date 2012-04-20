@@ -114,36 +114,253 @@ class FactrTest extends PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey('email', $var);
 	}
 
+	/**
+	 * Tests Factr->invoices()
+	 */
+	public function testInvoices()
+	{
+		$var = $this->factr->invoices();
+
+		$this->assertType('array', $var);
+		foreach($var as $row)
+		{
+			$this->assertArrayHasKey('id', $row);
+			$this->assertArrayHasKey('client_id', $row);
+			$this->assertArrayHasKey('iid', $row);
+			$this->assertArrayHasKey('items', $row);
+			foreach($row['items'] as $item)
+			{
+				$this->assertArrayHasKey('description', $item);
+				$this->assertArrayHasKey('amount', $item);
+				$this->assertArrayHasKey('price', $item);
+				$this->assertArrayHasKey('vat', $item);
+				$this->assertArrayHasKey('reference_id', $item);
+				$this->assertArrayHasKey('total_without_vat', $item);
+				$this->assertArrayHasKey('total_vat', $item);
+				$this->assertArrayHasKey('total_with_vat', $item);
+			}
+		}
+	}
+
+	/**
+	 * Tests Factr->invoicesGet()
+	 */
+	public function testInvoicesGet()
 	{
 		$client = array(
-				'email' => 'factr@verkoyen.eu',
-				'first_name' => 'Tijs',
-				'last_name' => 'Verkoyen',
-				'company' => 'SumoCoders',
-				'billing_address' => array(
-						'street' => 'Kerkstraat',
-						'number' => '108',
-						'city' => '9050',
-						'zip' => 'Gentbrugge',
-						'country' => 'BE'
-				),
-				'company_address' => array(
-						'street' => 'Kerkstraat',
-						'number' => '108',
-						'city' => '9050',
-						'zip' => 'Gentbrugge',
-						'country' => 'BE'
-				),
-				'vat' => 'BE 0829.564.289'
+			'email' => 'factr@verkoyen.eu',
+			'first_name' => 'Tijs',
+			'last_name' => 'Verkoyen',
+			'company' => 'SumoCoders',
+			'billing_address' => array(
+				'street' => 'Kerkstraat',
+				'number' => '108',
+				'city' => '9050',
+				'zip' => 'Gentbrugge',
+				'country' => 'BE'
+			),
+			'company_address' => array(
+				'street' => 'Kerkstraat',
+				'number' => '108',
+				'city' => '9050',
+				'zip' => 'Gentbrugge',
+				'country' => 'BE'
+			),
+			'vat' => 'BE 0829.564.289'
 		);
 
+		// create client
 		$var = $this->factr->clientsCreate($client);
+
+		$invoice = array(
+			'client_id' => $var['id'],
+			'items' => array(
+				array(
+					'description' => 'foo',
+					'price' => 123.45,
+					'amount' => 67,
+					'vat' => 21
+				),
+				array(
+					'description' => 'bar',
+					'price' => 543.21,
+					'amount' => 76,
+					'vat' => 6
+				)
+			)
+		);
+
+		// create invoice
+		$var = $this->factr->invoicesCreate($invoice);
+
+		// get the invoice
+		$var = $this->factr->invoicesGet($var['id']);
 
 		$this->assertType('array', $var);
 		$this->assertArrayHasKey('id', $var);
-		$this->assertArrayHasKey('cid', $var);
-		$this->assertArrayHasKey('email', $var);
-		$this->assertEquals($client['email'], $var['email'][0]);
+		$this->assertArrayHasKey('client_id', $var);
+		$this->assertArrayHasKey('iid', $var);
+		$this->assertArrayHasKey('items', $var);
+		foreach($var['items'] as $item)
+		{
+			$this->assertArrayHasKey('description', $item);
+			$this->assertArrayHasKey('amount', $item);
+			$this->assertArrayHasKey('price', $item);
+			$this->assertArrayHasKey('vat', $item);
+			$this->assertArrayHasKey('reference_id', $item);
+			$this->assertArrayHasKey('total_without_vat', $item);
+			$this->assertArrayHasKey('total_vat', $item);
+			$this->assertArrayHasKey('total_with_vat', $item);
+		}
+	}
+
+	/**
+	 * Tests Factr->invoicesGetByIid()
+	 */
+	public function testInvoicesGetByIid()
+	{
+		$var = $this->factr->invoicesGetByIid('IV08004');
+			$this->assertType('array', $var);
+		$this->assertArrayHasKey('id', $var);
+		$this->assertArrayHasKey('client_id', $var);
+		$this->assertArrayHasKey('iid', $var);
+		$this->assertArrayHasKey('items', $var);
+		foreach($var['items'] as $item)
+		{
+			$this->assertArrayHasKey('description', $item);
+			$this->assertArrayHasKey('amount', $item);
+			$this->assertArrayHasKey('price', $item);
+			$this->assertArrayHasKey('vat', $item);
+			$this->assertArrayHasKey('reference_id', $item);
+			$this->assertArrayHasKey('total_without_vat', $item);
+			$this->assertArrayHasKey('total_vat', $item);
+			$this->assertArrayHasKey('total_with_vat', $item);
+		}
+	}
+
+	/**
+	 * Tests Factr->invoicesSendByMail()
+	 */
+	public function testInvoiceSendByMail()
+	{
+		$client = array(
+			'email' => 'factr@verkoyen.eu',
+			'first_name' => 'Tijs',
+			'last_name' => 'Verkoyen',
+			'company' => 'SumoCoders',
+			'billing_address' => array(
+				'street' => 'Kerkstraat',
+				'number' => '108',
+				'city' => '9050',
+				'zip' => 'Gentbrugge',
+				'country' => 'BE'
+			),
+			'company_address' => array(
+				'street' => 'Kerkstraat',
+				'number' => '108',
+				'city' => '9050',
+				'zip' => 'Gentbrugge',
+				'country' => 'BE'
+			),
+			'vat' => 'BE 0829.564.289'
+		);
+
+		// create client
+		$var = $this->factr->clientsCreate($client);
+
+		$invoice = array(
+			'client_id' => $var['id'],
+			'items' => array(
+				array(
+					'description' => 'foo',
+					'price' => 123.45,
+					'amount' => 67,
+					'vat' => 21
+				),
+				array(
+					'description' => 'bar',
+					'price' => 543.21,
+					'amount' => 76,
+					'vat' => 6
+				)
+			)
+		);
+
+		// create invoice
+		$var = $this->factr->invoicesCreate($invoice);
+
+		// send the invoice
+		$var = $this->factr->invoiceSendByMail($var['id'], 'foo@bar.com');
+
+		$this->assertType('array', $var);
+		$this->assertArrayHasKey('bcc', $var);
+		$this->assertArrayHasKey('cc', $var);
+		$this->assertArrayHasKey('subject', $var);
+		$this->assertArrayHasKey('text', $var);
+		$this->assertArrayHasKey('to', $var);
+		$this->assertEquals('foo@bar.com', $var['to'][0]);
+	}
+
+	/**
+	 * Tests Factr->invoicesAddPayment()
+	 */
+	public function testInvoicesAddPayment()
+	{
+		$client = array(
+			'email' => 'factr@verkoyen.eu',
+			'first_name' => 'Tijs',
+			'last_name' => 'Verkoyen',
+			'company' => 'SumoCoders',
+			'billing_address' => array(
+				'street' => 'Kerkstraat',
+				'number' => '108',
+				'city' => '9050',
+				'zip' => 'Gentbrugge',
+				'country' => 'BE'
+			),
+			'company_address' => array(
+				'street' => 'Kerkstraat',
+				'number' => '108',
+				'city' => '9050',
+				'zip' => 'Gentbrugge',
+				'country' => 'BE'
+			),
+			'vat' => 'BE 0829.564.289'
+		);
+
+		// create client
+		$var = $this->factr->clientsCreate($client);
+
+		$invoice = array(
+			'client_id' => $var['id'],
+			'items' => array(
+				array(
+					'description' => 'foo',
+					'price' => 123.45,
+					'amount' => 67,
+					'vat' => 21
+				),
+				array(
+					'description' => 'bar',
+					'price' => 543.21,
+					'amount' => 76,
+					'vat' => 6
+				)
+			)
+		);
+
+		// create invoice
+		$var = $this->factr->invoicesCreate($invoice);
+
+		// add payment
+		$var = $this->factr->invoicesAddPayment($var['id'], 12345.67);
+
+		$this->assertType('array', $var);
+		$this->assertArrayHasKey('amount', $var);
+		$this->assertArrayHasKey('id', $var);
+		$this->assertArrayHasKey('invoice_id', $var);
+		$this->assertArrayHasKey('amount', $var);
+		$this->assertArrayHasKey('paid_at', $var);
 	}
 }
 

@@ -327,6 +327,107 @@ class Factr
 
 		return false;
 	}
+
+// invoice methods
+	/**
+	 * Get a list of all the invoices.
+	 *
+	 * @return array
+	 */
+	public function invoices()
+	{
+		return $this->doCall('invoices.json');
+	}
+
+	/**
+	 * Get all of the available information for a single invoice. You 'll need the id of the invoice.
+	 *
+	 * @param string $id	The id of the invoice.
+	 * @return array
+	 */
+	public function invoicesGet($id)
+	{
+		return $this->doCall('invoices/' . (string) $id . '.json');
+	}
+
+	/**
+	 * Get all of the available information for a single invoice. You 'll need the iid of the invoice.
+	 *
+	 * @param string $iid	The iid of the invoice.
+	 * @return array
+	 */
+	public function invoicesGetByIid($iid)
+	{
+		return $this->doCall('invoices/by_iid/' . (string) $iid . '.json');
+	}
+
+	/**
+	 * Create a new invoice.
+	 *
+	 * @param array $invoice	The invoice information.
+	 * @return array
+	 */
+	public function invoicesCreate(array $invoice)
+	{
+		// build parameters
+		$parameters['invoice'] = $invoice;
+
+		// make the call
+		$return = $this->doCall('invoices.json', $parameters, 'POST');
+
+		// @todo	this should be altered in the API
+		if(isset($return['invoice'])) return $return['invoice'];
+
+		return false;
+	}
+
+	/**
+	 * Sending an invoice by mail.
+	 *
+	 * @param string $id
+	 * @param string[optional] $to
+	 * @param string[optional] $cc
+	 * @param string[optional] $bcc
+	 * @param string[optional] $subject
+	 * @param string[optional] $text
+	 * @return array
+	 */
+	public function invoiceSendByMail($id, $to = null, $cc = null, $bcc = null, $subject = null, $text = null)
+	{
+		// build parameters
+		$parameters = array();
+		if($to !== null) $parameters['mail']['to'] = (string) $to;
+		if($cc !== null) $parameters['mail']['cc'] = (string) $cc;
+		if($bcc !== null) $parameters['mail']['bcc'] = (string) $bcc;
+		if($subject !== null) $parameters['mail']['subject'] = (string) $subject;
+		if($text !== null) $parameters['mail']['text'] = (string) $text;
+
+		// make the call
+		return $this->doCall('invoices/' . (string) $id . '/mails.json', $parameters, 'POST');
+	}
+
+	/**
+	 * Adding a payment to an invoice.
+	 *
+	 * @param string $id			The id of the invoice.
+	 * @param float $amount			The amount payed.
+	 * @param int[optional] $date	The date the payment was made (as a UNIX timestamp).
+	 * @return array
+	 */
+	public function invoicesAddPayment($id, $amount, $date = null)
+	{
+		// build parameters
+		$parameters['payment']['amount'] = (float) $amount;
+		if($date != null) $parameters['payment']['date'] = date('Y-m-d\TH:i:s', $date);
+
+		// make the call
+		$return = $this->doCall('invoices/' . (string) $id . '/payments.json', $parameters, 'POST');
+
+		// @todo	this should be altered in the API
+		if(isset($return['payment'])) return $return['payment'];
+
+		return false;
+	}
 }
 
 /**
