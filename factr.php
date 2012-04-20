@@ -1,8 +1,5 @@
 <?php
 
-// @todo	convert prices into floats
-// @todo	convert dates into timestamps
-
 /**
  * Factr class
  *
@@ -104,6 +101,21 @@ class Factr
 	}
 
 	/**
+	 * Decode the response
+	 *
+	 * @param mixed $value
+	 * @param string $key
+	 */
+	private function decodeResponse(&$value, $key)
+	{
+		// convert to float
+		if(in_array($key, array('amount', 'price', 'total_without_vat', 'total_with_vat', 'total_vat', 'total'), true))
+		{
+			$value = (float) $value;
+		}
+	}
+
+	/**
 	 * Make the call
 	 *
 	 * @param string $url				The URL to call.
@@ -201,6 +213,9 @@ class Factr
 
 		// validate json
 		if($json === false) throw new FactrException('Invalid JSON-response');
+
+		// decode the response
+		array_walk_recursive($json, array(__CLASS__, 'decodeResponse'));
 
 		// return
 		return $json;
