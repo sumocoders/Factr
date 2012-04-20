@@ -74,8 +74,37 @@ class FactrTest extends PHPUnit_Framework_TestCase
 	 */
 	public function testClientsGet()
 	{
-		// @todo	create a client
-		$var = $this->factr->clientsGet(1384);
+		$client = array(
+				'email' => 'factr@verkoyen.eu',
+				'first_name' => 'Tijs',
+				'last_name' => 'Verkoyen',
+				'company' => 'SumoCoders',
+				'billing_address' => array(
+						'street' => 'Kerkstraat',
+						'number' => '108',
+						'city' => '9050',
+						'zip' => 'Gentbrugge',
+						'country' => 'BE'
+				),
+				'company_address' => array(
+						'street' => 'Kerkstraat',
+						'number' => '108',
+						'city' => '9050',
+						'zip' => 'Gentbrugge',
+						'country' => 'BE'
+				),
+				'vat' => 'BE 0829.564.289'
+		);
+
+		$var = $this->factr->clientsCreate($client);
+
+		$this->assertType('array', $var);
+		$this->assertArrayHasKey('id', $var);
+		$this->assertArrayHasKey('cid', $var);
+		$this->assertArrayHasKey('email', $var);
+		$this->assertEquals($client['email'], $var['email'][0]);
+
+		$var = $this->factr->clientsGet($var['id']);
 
 		$this->assertType('array', $var);
 		$this->assertArrayHasKey('id', $var);
@@ -85,10 +114,6 @@ class FactrTest extends PHPUnit_Framework_TestCase
 		$this->assertArrayHasKey('email', $var);
 	}
 
-	/**
-	 * Tests Factr->clientsGet()
-	 */
-	public function testClientsCreate()
 	{
 		$client = array(
 				'email' => 'factr@verkoyen.eu',
