@@ -288,7 +288,7 @@ class Factr
 
 // client methods
 	/**
-	 * Get a list of clients
+	 * Get a list of all the clients for the authenticating user.
 	 *
 	 * @return array
 	 */
@@ -298,7 +298,7 @@ class Factr
 	}
 
 	/**
-	 * Get a specific client
+	 * Get all of the available information for a single client. You 'll need the id of the client.
 	 *
 	 * @param string $id	The id of the client.
 	 * @return array
@@ -309,7 +309,7 @@ class Factr
 	}
 
 	/**
-	 * Create a client
+	 * Create a new client.
 	 *
 	 * @param array $client		The information of the client.
 	 * @return array|bool
