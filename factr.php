@@ -133,7 +133,7 @@ class Factr
 		elseif($method == 'POST')
 		{
 			$options[CURLOPT_POST] = true;
-			$options[CURLOPT_POSTFIELDS] = self::flattenArray($parameters);
+			$options[CURLOPT_POSTFIELDS] = http_build_query($parameters);
 		}
 
 		// prepend
@@ -189,31 +189,6 @@ class Factr
 
 		// return
 		return $json;
-	}
-
-	/**
-	 * Flatten an array
-	 *
-	 * @param array $array				The array to flatten.
-	 * @param mixed[optional] $prefix	A prefix that will be prepende before the key.
-	 * @return array
-	 */
-	private static function flattenArray(array $array, $prefix = false)
-	{
-		// init var
-		$return = array();
-
-		// loop values
-		foreach($array as $key => $value)
-		{
-			// build prefix
-			$prefix = ($prefix !== false) ? $prefix . '[' . $key . ']' : $key;
-
-			if(!is_array($value)) $return[$prefix] = $value;
-			else $return = array_merge($return, self::flattenArray($value, $prefix));
-		}
-
-		return $return;
 	}
 
 	/**
