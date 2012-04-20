@@ -285,6 +285,48 @@ class Factr
 	{
 		$this->username = (string) $username;
 	}
+
+// client methods
+	/**
+	 * Get a list of clients
+	 *
+	 * @return array
+	 */
+	public function clients()
+	{
+		return $this->doCall('clients.json');
+	}
+
+	/**
+	 * Get a specific client
+	 *
+	 * @param string $id	The id of the client.
+	 * @return array
+	 */
+	public function clientsGet($id)
+	{
+		return $this->doCall('clients/' . (string) $id . '.json');
+	}
+
+	/**
+	 * Create a client
+	 *
+	 * @param array $client		The information of the client.
+	 * @return array|bool
+	 */
+	public function clientsCreate(array $client)
+	{
+		// build parameters
+		$parameters['client'] = $client;
+
+		// make the call
+		$return = $this->doCall('clients.json', $parameters, 'POST');
+
+		// @todo	this should be altered in the API
+		if(isset($return['client'])) return $return['client'];
+
+		return false;
+	}
 }
 
 /**
