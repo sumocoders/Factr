@@ -1,5 +1,8 @@
 <?php
 
+// @todo	convert prices into floats
+// @todo	convert dates into timestamps
+
 /**
  * Factr class
  *

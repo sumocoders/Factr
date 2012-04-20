@@ -75,25 +75,25 @@ class FactrTest extends PHPUnit_Framework_TestCase
 	public function testClientsGet()
 	{
 		$client = array(
-				'email' => 'factr@verkoyen.eu',
-				'first_name' => 'Tijs',
-				'last_name' => 'Verkoyen',
-				'company' => 'SumoCoders',
-				'billing_address' => array(
-						'street' => 'Kerkstraat',
-						'number' => '108',
-						'city' => '9050',
-						'zip' => 'Gentbrugge',
-						'country' => 'BE'
-				),
-				'company_address' => array(
-						'street' => 'Kerkstraat',
-						'number' => '108',
-						'city' => '9050',
-						'zip' => 'Gentbrugge',
-						'country' => 'BE'
-				),
-				'vat' => 'BE 0829.564.289'
+			'email' => 'factr@verkoyen.eu',
+			'first_name' => 'Tijs',
+			'last_name' => 'Verkoyen',
+			'company' => 'SumoCoders',
+			'billing_address' => array(
+				'street' => 'Kerkstraat',
+				'number' => '108',
+				'city' => '9050',
+				'zip' => 'Gentbrugge',
+				'country' => 'BE'
+			),
+			'company_address' => array(
+				'street' => 'Kerkstraat',
+				'number' => '108',
+				'city' => '9050',
+				'zip' => 'Gentbrugge',
+				'country' => 'BE'
+			),
+			'vat' => 'BE 0829.564.289'
 		);
 
 		$var = $this->factr->clientsCreate($client);

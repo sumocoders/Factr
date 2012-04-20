@@ -48,7 +48,7 @@ $invoice = array(
 );
 
 // $response = $factr->clients();
-// $response = $factr->clientsGet(1384);
+// $response = $factr->clientsGet(2292);
 // $response = $factr->clientsCreate($client);
 // $response = $factr->invoices();
 // $response = $factr->invoicesGet(5258);
