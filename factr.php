@@ -172,10 +172,22 @@ class Factr
 			$json = @json_decode($response, true);
 
 			// throw
-			if($json !== null && $json !== false) throw new FactrException($response, $headers['http_code']);
+			if($json !== null && $json !== false)
+			{
+				// errors?
+				if(isset($json['errors']))
+				{
+					$message = '';
+					foreach($json['errors'] as $key => $value) $message .= $key . ': ' . implode(', ', $value) . "\n";
+
+					throw new FactrException($message);
+				}
+
+				else throw new FactrException($response, $headers['http_code']);
+			}
 
 			// unknow error
-			throw new FactrException('Invalid response', $headers['http_code']);
+			throw new FactrException('Invalid response (' . $headers['http_code'] . ')', $headers['http_code']);
 		}
 
 		// error?
