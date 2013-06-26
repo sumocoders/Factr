@@ -1,4 +1,14 @@
 <?php
+namespace TijsVerkoyen\Factr;
+
+/**
+ * Twitter class
+ *
+ * @author		Tijs Verkoyen <php-factr@verkoyen.eu>
+ * @version		2.0.0
+ * @copyright	Copyright (c), Tijs Verkoyen. All rights reserved.
+ * @license		BSD License
+ */
 
 /**
  * Factr class
@@ -25,7 +35,7 @@
  * @copyright		Copyright (c) Tijs Verkoyen. All rights reserved.
  * @license			BSD License
  */
-class factr
+class Factr
 {
     // internal constant to enable/disable debugging
     const DEBUG = false;

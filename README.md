@@ -1,5 +1,7 @@
 # Factr class
 
+> Factr is an online invoicing web application
+
 ## About
 
 PHP Factr is a (wrapper)class to communicate with [Factr](http://factr.be).
