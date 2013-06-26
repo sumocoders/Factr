@@ -60,7 +60,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $response = $this->factr->clients();
         $this->assertInternalType('array', $response);
         foreach ($response as $item) {
-            $this->assertInstanceOf('\TijsVerkoyen\Factr\Client', $item);
+            $this->assertInstanceOf('\TijsVerkoyen\Factr\Client\Client', $item);
         }
     }
 
@@ -69,14 +69,14 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testClientsCreate()
     {
-        $address = new \TijsVerkoyen\Factr\Address();
+        $address = new \TijsVerkoyen\Factr\Client\Address();
         $address->setStreet('Kerkstraat');
         $address->setNumber('108');
         $address->setZip('9050');
         $address->setCity('Gentbrugge');
         $address->setCountry('BE');
 
-        $client = new \TijsVerkoyen\Factr\Client();
+        $client = new \TijsVerkoyen\Factr\Client\Client();
         $client->setFirstName('Tijs');
         $client->setLastName('Verkoyen');
         $client->addEmail('php-factr@verkoyen.eu');
@@ -86,7 +86,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
 
         $response = $this->factr->clientsCreate($client);
 
-        $this->assertInstanceOf('\TijsVerkoyen\Factr\Client', $response);
+        $this->assertInstanceOf('\TijsVerkoyen\Factr\Client\Client', $response);
 
         // @todo remove client
     }
@@ -96,14 +96,14 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testClientsGet()
     {
-        $address = new \TijsVerkoyen\Factr\Address();
+        $address = new \TijsVerkoyen\Factr\Client\Address();
         $address->setStreet('Kerkstraat');
         $address->setNumber('108');
         $address->setZip('9050');
         $address->setCity('Gentbrugge');
         $address->setCountry('BE');
 
-        $client = new \TijsVerkoyen\Factr\Client();
+        $client = new \TijsVerkoyen\Factr\Client\Client();
         $client->setFirstName('Tijs');
         $client->setLastName('Verkoyen');
         $client->addEmail('php-factr@verkoyen.eu');
@@ -114,7 +114,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $response = $this->factr->clientsCreate($client);
         $response = $this->factr->clientsGet($response->getId());
 
-        $this->assertInstanceOf('\TijsVerkoyen\Factr\Client', $response);
+        $this->assertInstanceOf('\TijsVerkoyen\Factr\Client\Client', $response);
 
         // @todo remove client
     }

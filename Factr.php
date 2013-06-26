@@ -1,6 +1,7 @@
 <?php
 namespace TijsVerkoyen\Factr;
 use TijsVerkoyen\Factr\Exception;
+use TijsVerkoyen\Factr\Client\Client;
 
 /**
  * Factr class

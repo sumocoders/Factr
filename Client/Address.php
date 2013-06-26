@@ -1,6 +1,6 @@
 <?php
 
-namespace TijsVerkoyen\Factr;
+namespace TijsVerkoyen\Factr\Client;
 
 /**
  * Address class

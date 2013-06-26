@@ -1,8 +1,8 @@
 <?php
 
-namespace TijsVerkoyen\Factr;
+namespace TijsVerkoyen\Factr\Client;
 
-use TijsVerkoyen\Factr\Address;
+use TijsVerkoyen\Factr\Client\Address;
 
 /**
  * Client class
@@ -41,7 +41,7 @@ class Client
     protected $invoiceableByEmail, $invoiceableBySnailMail, $invoiceableByFactr;
 
     /**
-     * @param \TijsVerkoyen\Factr\Address $billingAddress
+     * @param \TijsVerkoyen\Factr\Client\Address $billingAddress
      */
     public function setBillingAddress($billingAddress)
     {
@@ -49,7 +49,7 @@ class Client
     }
 
     /**
-     * @return \TijsVerkoyen\Factr\Address
+     * @return \TijsVerkoyen\Factr\Client\Address
      */
     public function getBillingAddress()
     {
@@ -105,7 +105,7 @@ class Client
     }
 
     /**
-     * @param \TijsVerkoyen\Factr\Address $companyAddress
+     * @param \TijsVerkoyen\Factr\Client\Address $companyAddress
      */
     public function setCompanyAddress($companyAddress)
     {
@@ -113,7 +113,7 @@ class Client
     }
 
     /**
-     * @return \TijsVerkoyen\Factr\Address
+     * @return \TijsVerkoyen\Factr\Client\Address
      */
     public function getCompanyAddress()
     {
