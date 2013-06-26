@@ -1,39 +1,14 @@
 <?php
 namespace TijsVerkoyen\Factr;
+use TijsVerkoyen\Factr\Exception;
 
 /**
- * Twitter class
+ * Factr class
  *
  * @author		Tijs Verkoyen <php-factr@verkoyen.eu>
  * @version		2.0.0
  * @copyright	Copyright (c), Tijs Verkoyen. All rights reserved.
  * @license		BSD License
- */
-
-/**
- * Factr class
- *
- * This source file can be used to communicate with Factr (http://factr.be)
- *
- * The class is documented in the file itself. If you find any bugs help me out and report them. Reporting can be done by sending an email to php-factr-bugs[at]verkoyen[dot]eu.
- * If you report a bug, make sure you give me enough information (include your code).
- *
- * License
- * Copyright (c) Tijs Verkoyen. All rights reserved.
- *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
- * 2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
- * 3. The name of the author may not be used to endorse or promote products derived from this software without specific prior written permission.
- *
- * This software is provided by the author "as is" and any express or implied warranties, including, but not limited to, the implied warranties of merchantability and fitness for a particular purpose are disclaimed. In no event shall the author be liable for any direct, indirect, incidental, special, exemplary, or consequential damages (including, but not limited to, procurement of substitute goods or services; loss of use, data, or profits; or business interruption) however caused and on any theory of liability, whether in contract, strict liability, or tort (including negligence or otherwise) arising in any way out of the use of this software, even if advised of the possibility of such damage.
- *
- * @author			Tijs Verkoyen <php-factr@verkoyen.eu>
- * @version			1.0.0
- *
- * @copyright		Copyright (c) Tijs Verkoyen. All rights reserved.
- * @license			BSD License
  */
 class Factr
 {
@@ -50,7 +25,7 @@ class Factr
     const API_VERSION = 'v1';
 
     // current version
-    const VERSION = '1.0.0';
+    const VERSION = '2.0.0';
 
     /**
      * cURL instance
@@ -107,7 +82,7 @@ class Factr
     public function __destruct()
     {
         // close the curl-instance if needed
-        if($this->curl !== null) curl_close($this->curl);
+        if($this->curl != null) curl_close($this->curl);
     }
 
     /**
@@ -125,6 +100,34 @@ class Factr
     }
 
     /**
+     * Encode data for usage in the API
+     *
+     * @param  mixed            $data
+     * @param  array            $array
+     * @param  string[optional] $prefix
+     * @return array
+     */
+    private function encodeData($data, $array = array(), $prefix = null)
+    {
+        if (is_object($data)) {
+            $data = get_object_vars($data);
+        }
+
+        foreach ($data as $key => $value) {
+            if($value === null) continue;
+
+            $k = isset($prefix) ? $prefix . '[' . $key . ']' : $key;
+            if (is_array($value) || is_object($value)) {
+                $array = $this->encodeData($value, $array, $k);
+            } else {
+                $array[$k] = $value;
+            }
+        }
+
+        return $array;
+    }
+
+    /**
      * Make the call
      *
      * @param  string           $url        The URL to call.
@@ -139,12 +142,10 @@ class Factr
         $method = (string) $method;
         $options = array();
 
-        // init var
-        $queryString = '';
-
         // through GET
         if ($method == 'GET') {
             // remove POST-specific stuff
+            unset($options[CURLOPT_HTTPHEADER]);
             unset($options[CURLOPT_POST]);
             unset($options[CURLOPT_POSTFIELDS]);
 
@@ -155,7 +156,14 @@ class Factr
         // through POST
         elseif ($method == 'POST') {
             $options[CURLOPT_POST] = true;
-            $options[CURLOPT_POSTFIELDS] = http_build_query($parameters);
+
+            // the data should be encoded, and because we can't use numeric
+            // keys for Rails, we replace them.
+            $data = $this->encodeData($parameters);
+            $data = http_build_query($data, null, '&');
+            $data = preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $data);
+
+            $options[CURLOPT_POSTFIELDS] = $data;
         }
 
         // prepend
@@ -194,27 +202,28 @@ class Factr
 
             // throw
             if ($json !== null && $json !== false) {
+
                 // errors?
                 if (isset($json['errors'])) {
                     $message = '';
                     foreach($json['errors'] as $key => $value) $message .= $key . ': ' . implode(', ', $value) . "\n";
 
-                    throw new FactrException($message);
-                } else throw new FactrException($response, $headers['http_code']);
+                    throw new Exception($message);
+                } else throw new Exception($response, $headers['http_code']);
             }
 
-            // unknow error
-            throw new FactrException('Invalid response (' . $headers['http_code'] . ')', $headers['http_code']);
+            // unknown error
+            throw new Exception('Invalid response (' . $headers['http_code'] . ')', $headers['http_code']);
         }
 
         // error?
-        if($errorNumber != '') throw new FactrException($errorMessage, $errorNumber);
+        if($errorNumber != '') throw new Exception($errorMessage, $errorNumber);
 
         // we expect JSON so decode it
         $json = @json_decode($response, true);
 
         // validate json
-        if($json === false) throw new FactrException('Invalid JSON-response');
+        if($json === false) throw new Exception('Invalid JSON-response');
 
         // decode the response
         array_walk_recursive($json, array(__CLASS__, 'decodeResponse'));
@@ -244,7 +253,7 @@ class Factr
     }
 
     /**
-     * Get the useragent that will be used. Our version will be prepended to yours.
+     * Get the user agent that will be used. Our version will be prepended to yours.
      * It will look like: "PHP Factr/<version> <your-user-agent>"
      *
      * @return string
@@ -287,7 +296,7 @@ class Factr
 
     /**
      * Set the user-agent for you application
-     * It will be appended to ours, the result will look like: "PHP Bitly/<version> <your-user-agent>"
+     * It will be appended to ours, the result will look like: "PHP Factr/<version> <your-user-agent>"
      *
      * @param string $userAgent Your user-agent, it should look like <app-name>/<app-version>.
      */
@@ -314,36 +323,50 @@ class Factr
      */
     public function clients()
     {
-        return $this->doCall('clients.json');
+        $clients = array();
+        $rawData = $this->doCall('clients.json');
+        if (!empty($rawData)) {
+            foreach ($rawData as $data) {
+                $clients[] = Client::initializeWithRawData($data);
+            }
+        }
+
+        return $clients;
     }
 
     /**
      * Get all of the available information for a single client. You 'll need the id of the client.
      *
      * @param  string $id The id of the client.
-     * @return array
+     * @return Client
      */
     public function clientsGet($id)
     {
-        return $this->doCall('clients/' . (string) $id . '.json');
+        $rawData = $this->doCall('clients/' . (string) $id . '.json');
+        if(empty($rawData)) return false;
+
+        return Client::initializeWithRawData($rawData);
     }
 
     /**
      * Create a new client.
      *
-     * @param  array      $client The information of the client.
+     * @param  Client     $client The information of the client.
      * @return array|bool
      */
-    public function clientsCreate(array $client)
+    public function clientsCreate(Client $client)
     {
         // build parameters
-        $parameters['client'] = $client;
+        $parameters['client'] = $client->toArray();
 
         // make the call
         $return = $this->doCall('clients.json', $parameters, 'POST');
 
-        // @todo	this should be altered in the API
-        if(isset($return['client'])) return $return['client'];
+        var_dump($return);
+
+        if (isset($return['client'])) {
+            return Client::initializeWithRawData($return['client']);
+        }
 
         return false;
     }
@@ -448,13 +471,4 @@ class Factr
 
         return false;
     }
-}
-
-/**
- * Factr Exception class
- *
- * @author	Tijs Verkoyen <php-factr@verkoyen.eu>
- */
-class FactrException extends Exception
-{
 }
