@@ -1,7 +1,11 @@
 <?php
 namespace TijsVerkoyen\Factr;
+
 use TijsVerkoyen\Factr\Exception;
 use TijsVerkoyen\Factr\Client\Client;
+use TijsVerkoyen\Factr\Invoice\Invoice;
+use TijsVerkoyen\Factr\Invoice\Mail;
+use TijsVerkoyen\Factr\Invoice\Payment;
 
 /**
  * Factr class
@@ -352,8 +356,8 @@ class Factr
     /**
      * Create a new client.
      *
-     * @param  Client     $client The information of the client.
-     * @return array|bool
+     * @param  Client      $client The information of the client.
+     * @return Client|bool
      */
     public function clientsCreate(Client $client)
     {
@@ -362,8 +366,6 @@ class Factr
 
         // make the call
         $return = $this->doCall('clients.json', $parameters, 'POST');
-
-        var_dump($return);
 
         if (isset($return['client'])) {
             return Client::initializeWithRawData($return['client']);
@@ -380,18 +382,29 @@ class Factr
      */
     public function invoices()
     {
-        return $this->doCall('invoices.json');
+        $invoices = array();
+        $rawData = $this->doCall('invoices.json');
+        if (!empty($rawData)) {
+            foreach ($rawData as $data) {
+                $invoices[] = Invoice::initializeWithRawData($data);
+            }
+        }
+
+        return $invoices;
     }
 
     /**
      * Get all of the available information for a single invoice. You 'll need the id of the invoice.
      *
-     * @param  string $id The id of the invoice.
-     * @return array
+     * @param  string  $id The id of the invoice.
+     * @return Invoice
      */
     public function invoicesGet($id)
     {
-        return $this->doCall('invoices/' . (string) $id . '.json');
+        $rawData = $this->doCall('invoices/' . (string) $id . '.json');
+        if(empty($rawData)) return false;
+
+        return Invoice::initializeWithRawData($rawData);
     }
 
     /**
@@ -402,7 +415,10 @@ class Factr
      */
     public function invoicesGetByIid($iid)
     {
-        return $this->doCall('invoices/by_iid/' . (string) $iid . '.json');
+        $rawData = $this->doCall('invoices/by_iid/' . (string) $iid . '.json');
+        if(empty($rawData)) return false;
+
+        return Invoice::initializeWithRawData($rawData);
     }
 
     /**
@@ -434,7 +450,7 @@ class Factr
      * @param  string[optional] $bcc
      * @param  string[optional] $subject
      * @param  string[optional] $text
-     * @return array
+     * @return Mail
      */
     public function invoiceSendByMail($id, $to = null, $cc = null, $bcc = null, $subject = null, $text = null)
     {
@@ -447,28 +463,33 @@ class Factr
         if($text !== null) $parameters['mail']['text'] = (string) $text;
 
         // make the call
-        return $this->doCall('invoices/' . (string) $id . '/mails.json', $parameters, 'POST');
+        $rawData = $this->doCall('invoices/' . (string) $id . '/mails.json', $parameters, 'POST');
+        if(empty($rawData)) return false;
+
+        return Mail::initializeWithRawData($rawData);
     }
 
     /**
      * Adding a payment to an invoice.
      *
-     * @param  string        $id     The id of the invoice.
-     * @param  float         $amount The amount payed.
-     * @param  int[optional] $date   The date the payment was made (as a UNIX timestamp).
-     * @return array
+     * @param  string              $id     The id of the invoice.
+     * @param  float               $amount The amount payed.
+     * @param  \DateTime[optional] $date   The date the payment was made (as a UNIX timestamp).
+     * @return Payment
      */
-    public function invoicesAddPayment($id, $amount, $date = null)
+    public function invoicesAddPayment($id, $amount, \DateTime $date = null)
     {
         // build parameters
         $parameters['payment']['amount'] = (float) $amount;
-        if($date != null) $parameters['payment']['date'] = date('Y-m-d\TH:i:s', $date);
+        if($date != null) $parameters['payment']['date'] = date('Y-m-d\TH:i:s', $date->getTimestamp());
 
         // make the call
-        $return = $this->doCall('invoices/' . (string) $id . '/payments.json', $parameters, 'POST');
+        $rawData = $this->doCall('invoices/' . (string) $id . '/payments.json', $parameters, 'POST');
 
         // @todo	this should be altered in the API
-        if(isset($return['payment'])) return $return['payment'];
+        if (isset($rawData['payment'])) {
+            return Payment::initializeWithRawData($rawData['payment']);
+        }
 
         return false;
     }
