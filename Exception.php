@@ -1,5 +1,5 @@
 <?php
-namespace TijsVerkoyen\Factr;
+namespace SumoCoders\Factr;
 
 /**
  * Factr Exception class

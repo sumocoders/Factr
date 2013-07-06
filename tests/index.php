@@ -4,10 +4,10 @@
 require_once '../../../autoload.php';
 require_once 'config.php';
 
-use \TijsVerkoyen\Factr\Factr;
-use \TijsVerkoyen\Factr\Client\Client;
-use \TijsVerkoyen\Factr\Client\Address;
-use \TijsVerkoyen\Factr\Invoice\Invoice;
+use \SumoCoders\Factr\Factr;
+use \SumoCoders\Factr\Client\Client;
+use \SumoCoders\Factr\Client\Address;
+use \SumoCoders\Factr\Invoice\Invoice;
 
 // create instance
 $factr = new Factr(USERNAME, PASSWORD);

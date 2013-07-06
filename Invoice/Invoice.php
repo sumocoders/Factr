@@ -1,7 +1,7 @@
 <?php
-namespace TijsVerkoyen\Factr\Invoice;
+namespace SumoCoders\Factr\Invoice;
 
-use TijsVerkoyen\Factr\Factr;
+use SumoCoders\Factr\Factr;
 
 class Invoice
 {

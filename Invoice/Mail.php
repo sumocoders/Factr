@@ -1,5 +1,5 @@
 <?php
-namespace TijsVerkoyen\Factr\Invoice;
+namespace SumoCoders\Factr\Invoice;
 
 class Mail
 {

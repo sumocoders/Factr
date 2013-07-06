@@ -1,6 +1,6 @@
 <?php
 
-namespace TijsVerkoyen\Factr\Client;
+namespace SumoCoders\Factr\Client;
 
 /**
  * Address class

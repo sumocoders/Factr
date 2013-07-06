@@ -1,11 +1,11 @@
 <?php
-namespace TijsVerkoyen\Factr;
+namespace SumoCoders\Factr;
 
-use TijsVerkoyen\Factr\Exception;
-use TijsVerkoyen\Factr\Client\Client;
-use TijsVerkoyen\Factr\Invoice\Invoice;
-use TijsVerkoyen\Factr\Invoice\Mail;
-use TijsVerkoyen\Factr\Invoice\Payment;
+use SumoCoders\Factr\Exception;
+use SumoCoders\Factr\Client\Client;
+use SumoCoders\Factr\Invoice\Invoice;
+use SumoCoders\Factr\Invoice\Mail;
+use SumoCoders\Factr\Invoice\Payment;
 
 /**
  * Factr class
