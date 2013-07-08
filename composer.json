@@ -1,0 +1,22 @@
+{
+	"name": "sumocoders/factr",
+	"type": "library",
+	"description": "PHP Factr is a (wrapper)class to communicate with Factr (http://www.factr.be).",
+	"homepage": "https://github.com/sumocoders/Factr",
+	"license": "BSD",
+	"authors": [
+		{
+			"name": "Tijs Verkoyen",
+			"email": "php-factr@verkoyen.eu",
+			"role": "Developer"
+		}
+	],
+	"require": {
+		"php": ">=5.2.0",
+		"ext-curl": "*"
+	},
+	"target-dir": "SumoCoders/Factr",
+	"autoload": {
+		"psr-0": {"SumoCoders\\Factr": ""}
+	}
+}
