@@ -166,4 +166,28 @@ class Item
 
         return $item;
     }
+
+    /**
+     * Converts the object into an array
+     *
+     * @param  bool[optional] $forApi Will the result be used in the API?
+     * @return array
+     */
+    public function toArray($forApi = false)
+    {
+        $data = array();
+        $data['description'] = $this->getDescription();
+        $data['price'] = $this->getPrice();
+        $data['amount'] = $this->getAmount();
+        $data['vat'] = $this->getVat();
+
+        if($forApi) return $data;
+
+        $data['totalWithoutVat'] = $this->getTotalWithoutVat();
+        $data['totalVat'] = $this->getTotalVat();
+        $data['totalWithVat'] = $this->getTotalWithVat();
+        $data['referenceId'] = $this->getReferenceId();
+
+        return $data;
+    }
 }

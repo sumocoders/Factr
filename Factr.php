@@ -365,10 +365,10 @@ class Factr
         $parameters['client'] = $client->toArray();
 
         // make the call
-        $return = $this->doCall('clients.json', $parameters, 'POST');
+        $rawData = $this->doCall('clients.json', $parameters, 'POST');
 
-        if (isset($return['client'])) {
-            return Client::initializeWithRawData($return['client']);
+        if (isset($rawData['client'])) {
+            return Client::initializeWithRawData($rawData['client']);
         }
 
         return false;
@@ -424,19 +424,20 @@ class Factr
     /**
      * Create a new invoice.
      *
-     * @param  array $invoice The invoice information.
-     * @return array
+     * @param  Invoice $invoice The invoice information.
+     * @return Invoice
      */
-    public function invoicesCreate(array $invoice)
+    public function invoicesCreate(Invoice $invoice)
     {
         // build parameters
-        $parameters['invoice'] = $invoice;
+        $parameters['invoice'] = $invoice->toArray();
 
         // make the call
-        $return = $this->doCall('invoices.json', $parameters, 'POST');
+        $rawData = $this->doCall('invoices.json', $parameters, 'POST');
 
-        // @todo	this should be altered in the API
-        if(isset($return['invoice'])) return $return['invoice'];
+        if (isset($rawData['invoice'])) {
+            return Invoice::initializeWithRawData($rawData['invoice']);
+        }
 
         return false;
     }

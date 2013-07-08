@@ -1,6 +1,7 @@
 <?php
 namespace SumoCoders\Factr\Invoice;
 
+use SumoCoders\Factr\Client\Client;
 use SumoCoders\Factr\Factr;
 
 class Invoice
@@ -29,6 +30,28 @@ class Invoice
      * @var float
      */
     protected $total;
+
+    /**
+     * @var \SumoCoders\Factr\Client\Client
+     */
+    protected $client;
+
+    /**
+     * @param \SumoCoders\Factr\Client\Client $client
+     */
+    public function setClient(Client $client)
+    {
+        $this->client = $client;
+        $this->setClientId($client->getId());
+    }
+
+    /**
+     * @return \SumoCoders\Factr\Client\Client
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
 
     /**
      * @param int $clientId
@@ -254,5 +277,23 @@ class Invoice
         if(isset($data['due_date'])) $item->setGenerated(new \DateTime('@' . strtotime($data['due_date'])));
 
         return $item;
+    }
+
+    /**
+     * Converts the object into an array
+     *
+     * @param  bool[optional] $forApi Will the result be used in the API?
+     * @return array
+     */
+    public function toArray($forApi = false)
+    {
+        $data = array();
+        $data['client_id'] = $this->getClientId();
+        $data['items'] = array();
+        foreach ($this->items as $item) {
+            $data['items'][] = $item->toArray(true);
+        }
+
+        return $data;
     }
 }
