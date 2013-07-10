@@ -505,6 +505,19 @@ class Factr
     }
 
     /**
+     * Delete an invoice
+     *
+     * @param  int  $id
+     * @return bool
+     */
+    public function invoicesDelete($id)
+    {
+        $rawData = $this->doCall('invoices/' . (string) $id . '.json', null, 'DELETE', true);
+
+        return ($rawData['http_code'] == 204);
+    }
+
+    /**
      * Sending an invoice by mail.
      *
      * @param  string           $id

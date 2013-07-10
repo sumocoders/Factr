@@ -281,9 +281,46 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $response = $this->factr->invoicesCreate($invoice);
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $response);
 
+    /**
+     * Tests Factr->invoicesDelete
+     */
+    public function testInvoicesDelete()
+    {
+        $address = new \SumoCoders\Factr\Client\Address();
+        $address->setStreet('Kerkstraat');
+        $address->setNumber('108');
+        $address->setZip('9050');
+        $address->setCity('Gentbrugge');
+        $address->setCountry('BE');
+
+        $client = new \SumoCoders\Factr\Client\Client();
+        $client->setFirstName('Tijs');
+        $client->setLastName('Verkoyen');
+        $client->addEmail('php-factr@verkoyen.eu');
+        $client->setBillingAddress($address);
+        $client->setCompanyAddress($address);
+        $client->setRemarks('Created by the Wrapperclass. ' . time());
+
+        $client = $this->factr->clientsCreate($client);
+
+        $item = new \SumoCoders\Factr\Invoice\Item();
+        $item->setDescription('just an item');
+        $item->setPrice(123.45);
+        $item->setAmount(67);
+        $item->setVat(21);
+
+        $invoice = new \SumoCoders\Factr\Invoice\Invoice();
+        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setClient($this->factr->clientsGet($client->getId()));
+        $invoice->addItem($item);
+
+        $invoice = $this->factr->invoicesCreate($invoice);
+        $response = $this->factr->invoicesDelete($invoice->getId());
+
+        $this->assertTrue($response);
+
         // cleanup
         $this->factr->clientsDelete($client->getId());
-        // @todo    remove invoice
     }
 
     /**

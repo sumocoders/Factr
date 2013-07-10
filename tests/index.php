@@ -76,6 +76,7 @@ try {
 //    $response = $factr->invoicesCreate($invoice);
 //    $response = $factr->invoiceSendByMail(5261, 'foo@bar.com');
 //    $response = $factr->invoicesAddPayment(5261, $payment);
+//    $response = $factr->invoicesDelete($response->getId());
 } catch (Exception $e) {
     var_dump($e);
 }
