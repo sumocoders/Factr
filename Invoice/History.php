@@ -1,6 +1,11 @@
 <?php
 namespace SumoCoders\Factr\Invoice;
 
+/**
+ * Class History
+ *
+ * @package SumoCoders\Factr\Invoice
+ */
 class History
 {
     /**

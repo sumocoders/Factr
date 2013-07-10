@@ -1,6 +1,11 @@
 <?php
 namespace SumoCoders\Factr\Invoice;
 
+/**
+ * Class Mail
+ *
+ * @package SumoCoders\Factr\Invoice
+ */
 class Mail
 {
     /**

@@ -4,6 +4,11 @@ namespace SumoCoders\Factr\Invoice;
 use SumoCoders\Factr\Client\Client;
 use SumoCoders\Factr\Factr;
 
+/**
+ * Class Invoice
+ *
+ * @package SumoCoders\Factr\Invoice
+ */
 class Invoice
 {
     /**
