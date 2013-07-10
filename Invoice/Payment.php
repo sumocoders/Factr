@@ -4,11 +4,6 @@ namespace SumoCoders\Factr\Invoice;
 class Payment
 {
     /**
-     * @var int
-     */
-    protected $id, $invoiceId;
-
-    /**
      * @var float
      */
     protected $amount;
@@ -16,7 +11,7 @@ class Payment
     /**
      * @var \DateTime
      */
-    protected $paidAt, $createdAt, $updatedAt;
+    protected $paidAt;
 
     /**
      * @var string
@@ -40,38 +35,6 @@ class Payment
     }
 
     /**
-     * @param \DateTime $createdAt
-     */
-    public function setCreatedAt($createdAt)
-    {
-        $this->createdAt = $createdAt;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt()
-    {
-        return $this->createdAt;
-    }
-
-    /**
-     * @param int $id
-     */
-    public function setId($id)
-    {
-        $this->id = $id;
-    }
-
-    /**
-     * @return int
-     */
-    public function getId()
-    {
-        return $this->id;
-    }
-
-    /**
      * @param string $identifier
      */
     public function setIdentifier($identifier)
@@ -85,22 +48,6 @@ class Payment
     public function getIdentifier()
     {
         return $this->identifier;
-    }
-
-    /**
-     * @param int $invoiceId
-     */
-    public function setInvoiceId($invoiceId)
-    {
-        $this->invoiceId = $invoiceId;
-    }
-
-    /**
-     * @return int
-     */
-    public function getInvoiceId()
-    {
-        return $this->invoiceId;
     }
 
     /**
@@ -120,22 +67,6 @@ class Payment
     }
 
     /**
-     * @param \DateTime $updatedAt
-     */
-    public function setUpdatedAt($updatedAt)
-    {
-        $this->updatedAt = $updatedAt;
-    }
-
-    /**
-     * @return \DateTime
-     */
-    public function getUpdatedAt()
-    {
-        return $this->updatedAt;
-    }
-
-    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -146,10 +77,6 @@ class Payment
         $item = new Payment();
 
         if(isset($data['amount'])) $item->setAmount($data['amount']);
-        if(isset($data['created_at'])) $item->setCreatedAt(new \DateTime('@' . strtotime($data['created_at'])));
-        if(isset($data['id'])) $item->setId($data['id']);
-        if(isset($data['invoice_id'])) $item->setInvoiceId($data['invoice_id']);
-        if(isset($data['updated_at'])) $item->setUpdatedAt(new \DateTime('@' . strtotime($data['updated_at'])));
         if(isset($data['paid_at'])) $item->setPaidAt(new \DateTime('@' . strtotime($data['paid_at'])));
         if(isset($data['identifier'])) $item->setIdentifier($data['identifier']);
 
@@ -165,16 +92,12 @@ class Payment
     public function toArray($forApi = false)
     {
         $data = array();
-        $data['id'] = $this->getId();
         $data['amount'] = $this->getAmount();
-        $data['paid_at'] = $this->getPaidAt()->getTimestamp();
-        $data['created_at'] = $this->getCreatedAt()->getTimestamp();
-        $data['updated_at'] = $this->getUpdatedAt()->getTimestamp();
-        $data['identifier'] = $this->getIdentifier();
-
-        if (!$forApi) {
-            $data['invoice_id'] = $this->getInvoiceId();
+        if ($this->paidAt !== null) {
+            if(!$forApi) $data['paid_at'] = $this->getPaidAt()->getTimestamp();
+            else $data['paid_at'] = date('Y-m-d\TH:i:s', $this->getPaidAt()->getTimestamp());
         }
+        $data['identifier'] = $this->getIdentifier();
 
         return $data;
     }

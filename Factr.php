@@ -517,15 +517,12 @@ class Factr
      */
     public function invoiceSendByMail($id, $to = null, $cc = null, $bcc = null, $subject = null, $text = null)
     {
-        // build parameters
         $parameters = array();
         if($to !== null) $parameters['mail']['to'] = (string) $to;
         if($cc !== null) $parameters['mail']['cc'] = (string) $cc;
         if($bcc !== null) $parameters['mail']['bcc'] = (string) $bcc;
         if($subject !== null) $parameters['mail']['subject'] = (string) $subject;
         if($text !== null) $parameters['mail']['text'] = (string) $text;
-
-        // make the call
         $rawData = $this->doCall('invoices/' . (string) $id . '/mails.json', $parameters, 'POST');
         if(empty($rawData)) return false;
 
@@ -535,25 +532,15 @@ class Factr
     /**
      * Adding a payment to an invoice.
      *
-     * @param  string              $id     The id of the invoice.
-     * @param  float               $amount The amount payed.
-     * @param  \DateTime[optional] $date   The date the payment was made (as a UNIX timestamp).
+     * @param  string  $id
+     * @param  Payment $payment
      * @return Payment
      */
-    public function invoicesAddPayment($id, $amount, \DateTime $date = null)
+    public function invoicesAddPayment($id, Payment $payment)
     {
-        // build parameters
-        $parameters['payment']['amount'] = (float) $amount;
-        if($date != null) $parameters['payment']['date'] = date('Y-m-d\TH:i:s', $date->getTimestamp());
-
-        // make the call
+        $parameters['payment'] = $payment->toArray(true);
         $rawData = $this->doCall('invoices/' . (string) $id . '/payments.json', $parameters, 'POST');
 
-        // @todo	this should be altered in the API
-        if (isset($rawData['payment'])) {
-            return Payment::initializeWithRawData($rawData['payment']);
-        }
-
-        return false;
+        return Payment::initializeWithRawData($rawData);
     }
 }

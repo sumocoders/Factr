@@ -235,11 +235,14 @@ class FactrTest extends PHPUnit_Framework_TestCase
 
         $response = $this->factr->invoicesCreate($invoice);
 
-        $response = $this->factr->invoicesAddPayment($response->getId(), 100);
+        $payment = new \SumoCoders\Factr\Invoice\Payment();
+        $payment->setAmount(10);
+
+        $response = $this->factr->invoicesAddPayment($response->getId(), $payment);
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Payment', $response);
 
         // cleanup
-        // @todo    remove client
+        $this->factr->clientsDelete($client->getId());
         // @todo    remove invoice
     }
 
@@ -279,7 +282,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $response);
 
         // cleanup
-        // @todo    remove client
+        $this->factr->clientsDelete($client->getId());
         // @todo    remove invoice
     }
 
@@ -321,7 +324,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Mail', $response);
 
         // cleanup
-        // @todo    remove client
+        $this->factr->clientsDelete($client->getId());
         // @todo    remove invoice
     }
 
@@ -363,7 +366,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $response);
 
         // cleanup
-        // @todo    remove client
+        $this->factr->clientsDelete($client->getId());
         // @todo    remove invoice
     }
 
@@ -407,7 +410,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $response);
 
         // cleanup
-        // @todo    remove client
+        $this->factr->clientsDelete($client->getId());
         // @todo    remove invoice
     }
 }
