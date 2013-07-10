@@ -390,9 +390,24 @@ class Factr
     }
 
     /**
+     * Update an existing client
+     *
+     * @param  string $id     The id of the client.
+     * @param  Client $client The information of the client.
+     * @return bool
+     */
+    public function clientsUpdate($id, Client $client)
+    {
+        $parameters['client'] = $client->toArray(true);
+        $rawData = $this->doCall('clients/' . (string) $id . '.json', $parameters, 'PUT', true);
+
+        return ($rawData['http_code'] == 204);
+    }
+
+    /**
      * Delete a client
      *
-     * @param  string $id
+     * @param  string $id The id of the client.
      * @return bool
      */
     public function clientsDelete($id)

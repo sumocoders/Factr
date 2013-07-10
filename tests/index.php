@@ -52,8 +52,10 @@ $invoice->addItem($item);
 
 try {
 //    $response = $factr->clients();
-//    $response = $factr->clientsGet(2292);
+//    $response = $factr->clientsGet(2882);
 //    $response = $factr->clientsCreate($client);
+//    $client->setRemarks('Updated by the wrapper class');
+//    $response = $factr->clientsUpdate('2882', $client);
 //    $response = $factr->clientsDelete(123);
 
 //    $response = $factr->invoices();

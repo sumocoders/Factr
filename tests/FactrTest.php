@@ -93,6 +93,37 @@ class FactrTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests Factr->clientsUpdate
+     */
+    public function testClientsUpdate()
+    {
+        $address = new \SumoCoders\Factr\Client\Address();
+        $address->setStreet('Kerkstraat');
+        $address->setNumber('108');
+        $address->setZip('9050');
+        $address->setCity('Gentbrugge');
+        $address->setCountry('BE');
+
+        $client = new \SumoCoders\Factr\Client\Client();
+        $client->setFirstName('Tijs');
+        $client->setLastName('Verkoyen');
+        $client->addEmail('php-factr@verkoyen.eu');
+        $client->setBillingAddress($address);
+        $client->setCompanyAddress($address);
+        $client->setRemarks('Created by the Wrapperclass. ' . time());
+
+        $response = $this->factr->clientsCreate($client);
+        $id = $response->getId();
+        $client->setRemarks('Updated by the Wrappercass. ' . time());
+        $response = $this->factr->clientsUpdate($id, $client);
+
+        $this->assertTrue($response);
+
+        // cleanup
+        $this->factr->clientsDelete($id);
+    }
+
+    /**
      * Tests Factr->clientsDelete
      */
     public function testClientsDelete()
