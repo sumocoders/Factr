@@ -155,6 +155,7 @@ class Item
     public static function initializeWithRawData($data)
     {
         $item = new Item();
+
         if(isset($data['description'])) $item->setDescription($data['description']);
         if(isset($data['amount'])) $item->setAmount($data['amount']);
         if(isset($data['price'])) $item->setPrice($data['price']);
@@ -181,12 +182,12 @@ class Item
         $data['amount'] = $this->getAmount();
         $data['vat'] = $this->getVat();
 
-        if($forApi) return $data;
-
-        $data['totalWithoutVat'] = $this->getTotalWithoutVat();
-        $data['totalVat'] = $this->getTotalVat();
-        $data['totalWithVat'] = $this->getTotalWithVat();
-        $data['referenceId'] = $this->getReferenceId();
+        if (!$forApi) {
+            $data['total_without_vat'] = $this->getTotalWithoutVat();
+            $data['total_vat'] = $this->getTotalVat();
+            $data['total_with_vat'] = $this->getTotalWithVat();
+            $data['reference_id'] = $this->getReferenceId();
+        }
 
         return $data;
     }

@@ -6,7 +6,7 @@ class Mail
     /**
      * @var array
      */
-    protected $bcc, $cc, $to;
+    protected $to, $cc, $bcc;
 
     /**
      * @var string
@@ -102,6 +102,7 @@ class Mail
     public static function initializeWithRawData($data)
     {
         $item = new Mail();
+
         if(isset($data['bcc'])) $item->setBcc($data['bcc']);
         if(isset($data['cc'])) $item->setCc($data['cc']);
         if(isset($data['subject'])) $item->setSubject($data['subject']);

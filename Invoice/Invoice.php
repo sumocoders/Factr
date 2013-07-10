@@ -216,7 +216,7 @@ class Invoice
     }
 
     /**
-     * @param string $state
+     * @param string $state Possible states are: paid, sent, created
      */
     public function setState($state)
     {
@@ -256,6 +256,7 @@ class Invoice
     public static function initializeWithRawData($data)
     {
         $item = new Invoice();
+
         if(isset($data['id'])) $item->setId($data['id']);
         if(isset($data['client_id'])) $item->setClientId($data['client_id']);
         if(isset($data['iid'])) $item->setIid($data['iid']);
@@ -289,9 +290,29 @@ class Invoice
     {
         $data = array();
         $data['client_id'] = $this->getClientId();
+        $data['state'] = $this->getState();
+        $data['description'] = $this->getDescription();
+        $data['shown_remark'] = $this->getShownRemark();
         $data['items'] = array();
-        foreach ($this->items as $item) {
-            $data['items'][] = $item->toArray(true);
+        foreach ($this->getItems() as $item) {
+            $data['items'][] = $item->toArray($forApi);
+        }
+
+        if (!$forApi) {
+            $data['id'] = $this->getId();
+            $data['idd'] = $this->getIid();
+            $data['generated'] = $this->getGenerated()->getTimestamp();
+            $data['due_date'] = $this->getDueDate()->getTimestamp();
+            $data['payments'] = array();
+            foreach ($this->getPayments() as $payment) {
+                $data['payments'][] = $payment->toArray($forApi);
+            }
+            $data['total'] = $this->getTotal();
+            $data['client'] = $this->getClient()->toArray($forApi);
+            $data['history'] = array();
+            foreach ($this->getHistory() as $history) {
+                $data['history'][] = $history->toArray($forApi);
+            }
         }
 
         return $data;

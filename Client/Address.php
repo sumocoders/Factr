@@ -160,9 +160,8 @@ class Address
     {
         $data = array();
 
-        if(!$forApi) $data['fullAddress'] = $this->getFullAddress();
         // @todo this is a bug in the API! Providing a full_address-attribute results in: There was a syntax error in your request. Internal error: unknown attribute: full_address
-//	    else $data['full_address'] = $this->getFullAddress();
+        if(!$forApi) $data['fullAddress'] = $this->getFullAddress();
         $data['street'] = $this->getStreet();
         $data['number'] = $this->getNumber();
         $data['zip'] = $this->getZip();

@@ -144,6 +144,7 @@ class Payment
     public static function initializeWithRawData($data)
     {
         $item = new Payment();
+
         if(isset($data['amount'])) $item->setAmount($data['amount']);
         if(isset($data['created_at'])) $item->setCreatedAt(new \DateTime('@' . strtotime($data['created_at'])));
         if(isset($data['id'])) $item->setId($data['id']);

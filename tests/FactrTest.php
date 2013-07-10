@@ -23,7 +23,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
     {
         parent::setUp();
         $this->factr = new Factr();
-	    $this->factr->setApiToken(API_TOKEN);
+        $this->factr->setApiToken(API_TOKEN);
     }
 
     /**
