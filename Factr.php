@@ -209,7 +209,7 @@ class Factr
             if ($json !== null && $json !== false) {
 
                 // errors?
-                if (isset($json['errors'])) {
+                if (is_array($json) && array_key_exists('errors', $json)) {
                     $message = '';
                     foreach($json['errors'] as $key => $value) $message .= $key . ': ' . implode(', ', $value) . "\n";
 
