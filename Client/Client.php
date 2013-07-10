@@ -22,13 +22,17 @@ class Client
     /**
      * @var string
      */
-    protected $cid, $firstName, $lastName, $company, $vat, $fax, $phone,
-        $cellphone, $website, $remarks;
+    protected $cid,
+                $company, $vat,
+                $firstName, $lastName,
+                $phone, $fax, $cellphone,
+                $website,
+                $remarks;
 
     /**
      * @var Address
      */
-    protected $companyAddress, $billingAddress;
+    protected $billingAddress, $companyAddress;
 
     /**
      * @var array

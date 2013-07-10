@@ -14,19 +14,31 @@ use \SumoCoders\Factr\Invoice\Item;
 $factr = new Factr(USERNAME, PASSWORD);
 
 $address = new Address();
-$address->setStreet('Kerkstraat');
-$address->setNumber('108');
-$address->setZip('9050');
 $address->setCity('Gentbrugge');
 $address->setCountry('BE');
+$address->setFullAddress('Kerkstraat 108' . "\n" . '9050 Gentbrugge');
+$address->setNumber('108');
+$address->setStreet('Kerkstraat');
+$address->setZip('9050');
 
 $client = new Client();
-$client->setFirstName('Tijs');
-$client->setLastName('Verkoyen');
-$client->addEmail('php-factr@verkoyen.eu');
-$client->setBillingAddress($address);
+$client->setPaymentDays(30);
+$client->setCid('CID' . time());
+$client->setCompany('company');
+$client->setVat('VAT');
+$client->setFirstName('first_name');
+$client->setLastName('last_name');
+$client->setPhone('phone');
+$client->setFax('fax');
+$client->setCellphone('cellphone');     // @remark doesn't work
+$client->setWebsite('website');
+$client->setRemarks('remarks');
 $client->setCompanyAddress($address);
-$client->setRemarks('Created by the Wrapperclass. ' . time());
+$client->setBillingAddress($address);
+$client->addEmail('e@mail.com');
+$client->setInvoiceableByEmail(false);
+$client->setInvoiceableBySnailMail(false);
+$client->setInvoiceableByFactr(false);
 
 $item = new Item();
 $item->setDescription('just an item');
