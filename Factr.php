@@ -33,18 +33,18 @@ class Factr
     const VERSION = '2.0.0';
 
     /**
+     * The token to use
+     *
+     * @var string
+     */
+    private $apiToken;
+
+    /**
      * cURL instance
      *
      * @var	resource
      */
     private $curl;
-
-    /**
-     * The password
-     *
-     * @var	string
-     */
-    private $password;
 
     /**
      * The timeout
@@ -60,27 +60,7 @@ class Factr
      */
     private $userAgent;
 
-    /**
-     * The username
-     *
-     * @var	string
-     */
-    private $username;
-
 // class methods
-    /**
-     * Default constructor
-     *
-     * @param string $username The username to authenticate with.
-     * @param string $password The password to use for authenticating.
-     */
-    public function __construct($username, $password)
-    {
-        // set some properties
-        $this->setUsername($username);
-        $this->setPassword($password);
-    }
-
     /**
      * Default destructor
      */
@@ -155,13 +135,17 @@ class Factr
             unset($options[CURLOPT_POST]);
             unset($options[CURLOPT_POSTFIELDS]);
 
-            // append to url
-            if(!empty($parameters)) $url .= '?' . http_build_query($parameters, null, '&');
+            // add credentials
+            $parameters['api_key'] = $this->getApiToken();
+
+            // build url
+            $url .= '?' . http_build_query($parameters, null, '&');
         }
 
         // through POST
         elseif ($method == 'POST') {
-            $options[CURLOPT_POST] = true;
+            // add credentials
+            $parameters['api_key'] = $this->getApiToken();
 
             // the data should be encoded, and because we can't use numeric
             // keys for Rails, we replace them.
@@ -169,15 +153,22 @@ class Factr
             $data = http_build_query($data, null, '&');
             $data = preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $data);
 
+            $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = $data;
         } elseif ($method == 'DELETE') {
             unset($options[CURLOPT_HTTPHEADER]);
             unset($options[CURLOPT_POST]);
             unset($options[CURLOPT_POSTFIELDS]);
-
             $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+
+            // add credentials
+            $parameters['api_key'] = $this->getApiToken();
+
+            // build url
+            $url .= '?' . http_build_query($parameters, null, '&');
         } elseif ($method == 'PUT') {
-            $options[CURLOPT_POST] = true;
+            // add credentials
+            $parameters['api_key'] = $this->getApiToken();
 
             // the data should be encoded, and because we can't use numeric
             // keys for Rails, we replace them.
@@ -186,7 +177,6 @@ class Factr
             $data = preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $data);
 
             $options[CURLOPT_POSTFIELDS] = $data;
-
             $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
         } else throw new Exception('Unsupported method (' . $method . ')');
 
@@ -202,8 +192,6 @@ class Factr
         $options[CURLOPT_SSL_VERIFYHOST] = false;
         $options[CURLOPT_RETURNTRANSFER] = true;
         $options[CURLOPT_TIMEOUT] = (int) $this->getTimeOut();
-        $options[CURLOPT_HTTPAUTH] = CURLAUTH_BASIC;
-        $options[CURLOPT_USERPWD] = $this->getUsername() . ':' . $this->getPassword();
 
         // init
         $this->curl = curl_init();
@@ -234,8 +222,8 @@ class Factr
 
                     throw new Exception($message);
                 } else {
-	                if(isset($json['message'])) $response = $json['message'];
-	                throw new Exception($response, $headers['http_code']);
+                    if(isset($json['message'])) $response = $json['message'];
+                    throw new Exception($response, $headers['http_code']);
                 }
             }
 
@@ -263,13 +251,13 @@ class Factr
     }
 
     /**
-     * Get the password
+     * Get the API token
      *
      * @return string
      */
-    public function getPassword()
+    public function getApiToken()
     {
-        return $this->password;
+        return $this->apiToken;
     }
 
     /**
@@ -294,23 +282,13 @@ class Factr
     }
 
     /**
-     * Get the username
+     * Set the API token
      *
-     * @return string
+     * @param string $apiToken
      */
-    public function getUsername()
+    public function setApiToken($apiToken)
     {
-        return $this->username;
-    }
-
-    /**
-     * Set the password
-     *
-     * @param string $password
-     */
-    public function setPassword($password)
-    {
-        $this->password = (string) $password;
+        $this->apiToken = $apiToken;
     }
 
     /**
@@ -343,6 +321,59 @@ class Factr
     public function setUsername($username)
     {
         $this->username = (string) $username;
+    }
+
+// account methods
+    /**
+     * Get an API token
+     *
+     * @param  string    $username Your username
+     * @param  string    $password Tour password
+     * @return string
+     * @throws Exception
+     */
+    public function accountApiToken($username, $password)
+    {
+        $url = self::API_URL . '/' . self::API_VERSION . '/account/api_token.json';
+
+        // set options
+        $options[CURLOPT_URL] = $url;
+        $options[CURLOPT_PORT] = self::API_PORT;
+        $options[CURLOPT_USERAGENT] = $this->getUserAgent();
+        $options[CURLOPT_FOLLOWLOCATION] = true;
+        $options[CURLOPT_SSL_VERIFYPEER] = false;
+        $options[CURLOPT_SSL_VERIFYHOST] = false;
+        $options[CURLOPT_RETURNTRANSFER] = true;
+        $options[CURLOPT_TIMEOUT] = (int) $this->getTimeOut();
+        $options[CURLOPT_HTTPAUTH] = CURLAUTH_BASIC;
+        $options[CURLOPT_USERPWD] = $username . ':' . $password;
+
+        // init
+        $this->curl = curl_init();
+
+        // set options
+        curl_setopt_array($this->curl, $options);
+
+        // execute
+        $response = curl_exec($this->curl);
+        $headers = curl_getinfo($this->curl);
+
+        // check status code
+        if ($headers['http_code'] != 200) {
+            throw new Exception('Could\'t authenticate you');
+        }
+
+        // we expect JSON so decode it
+        $json = @json_decode($response, true);
+
+        // validate json
+        if($json === false || !isset($json['api_token'])) throw new Exception('Invalid JSON-response');
+
+        // set the token
+        $this->setApiToken($json['api_token']);
+
+        // return
+        return $json['api_token'];
     }
 
 // client methods

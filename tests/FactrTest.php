@@ -22,7 +22,8 @@ class FactrTest extends PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->factr = new Factr(USERNAME, PASSWORD);
+        $this->factr = new Factr();
+	    $this->factr->setApiToken(API_TOKEN);
     }
 
     /**
@@ -50,6 +51,15 @@ class FactrTest extends PHPUnit_Framework_TestCase
     {
         $this->factr->setUserAgent('testing/1.0.0');
         $this->assertEquals('PHP Factr/' . Factr::VERSION . ' testing/1.0.0', $this->factr->getUserAgent());
+    }
+
+    /**
+     * Tests Factr->accountApiToken()
+     */
+    public function testAccountApiToken()
+    {
+        $response = $this->factr->accountApiToken(USERNAME, PASSWORD);
+        $this->assertInternalType('string', $response);
     }
 
     /**

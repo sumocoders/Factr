@@ -11,7 +11,8 @@ use \SumoCoders\Factr\Invoice\Invoice;
 use \SumoCoders\Factr\Invoice\Item;
 
 // create instance
-$factr = new Factr(USERNAME, PASSWORD);
+$factr = new Factr();
+$factr->setApiToken(API_TOKEN);
 
 $address = new Address();
 $address->setCity('Gentbrugge');
@@ -51,6 +52,8 @@ $invoice->setClient($factr->clientsGet(2292));
 $invoice->addItem($item);
 
 try {
+//    $response = $factr->accountApiToken(USERNAME, PASSWORD);
+
 //    $response = $factr->clients();
 //    $response = $factr->clientsGet(2882);
 //    $response = $factr->clientsCreate($client);
