@@ -233,7 +233,10 @@ class Factr
                     foreach($json['errors'] as $key => $value) $message .= $key . ': ' . implode(', ', $value) . "\n";
 
                     throw new Exception($message);
-                } else throw new Exception($response, $headers['http_code']);
+                } else {
+	                if(isset($json['message'])) $response = $json['message'];
+	                throw new Exception($response, $headers['http_code']);
+                }
             }
 
             // unknown error
