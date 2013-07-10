@@ -443,6 +443,25 @@ class Factr
         return ($rawData['http_code'] == 204);
     }
 
+    /**
+     * Get the invoices for a client
+     *
+     * @param  int   $id
+     * @return array
+     */
+    public function clientsInvoices($id)
+    {
+        $invoices = array();
+        $rawData = $this->doCall('clients/' . (string) $id . '/invoices.json');
+        if (!empty($rawData)) {
+            foreach ($rawData as $data) {
+                $invoices[] = Invoice::initializeWithRawData($data);
+            }
+        }
+
+        return $invoices;
+    }
+
 // invoice methods
     /**
      * Get a list of all the invoices.

@@ -64,11 +64,12 @@ try {
 //    $response = $factr->accountApiToken(USERNAME, PASSWORD);
 
 //    $response = $factr->clients();
-//    $response = $factr->clientsGet(2882);
+//    $response = $factr->clientsGet(3026);
 //    $response = $factr->clientsCreate($client);
 //    $client->setRemarks('Updated by the wrapper class');
-//    $response = $factr->clientsUpdate('2882', $client);
+//    $response = $factr->clientsUpdate(3026, $client);
 //    $response = $factr->clientsDelete(123);
+//    $response = $factr->clientsInvoices(2703);
 
 //    $response = $factr->invoices();
 //    $response = $factr->invoicesGet(5261);

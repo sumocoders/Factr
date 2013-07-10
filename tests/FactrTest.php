@@ -190,6 +190,23 @@ class FactrTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests Factr->clientsInvoices
+     */
+    public function testClientsInvoices()
+    {
+        $response = $this->factr->invoices();
+        foreach ($response as $invoice) {
+            if($invoice->getState() == 'paid')break;
+        }
+
+        $response = $this->factr->clientsInvoices($invoice->getClientId());
+        $this->assertInternalType('array', $response);
+        foreach ($response as $item) {
+            $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $item);
+        }
+    }
+
+    /**
      * Tests Factr->invoices
      */
     public function testInvoices()
