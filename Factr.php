@@ -212,9 +212,9 @@ class Factr
                     $message = '';
                     foreach($json['errors'] as $key => $value) $message .= $key . ': ' . implode(', ', $value) . "\n";
 
-                    throw new Exception($message);
+                    throw new Exception(trim($message));
                 } else {
-                    if(isset($json['message'])) $response = $json['message'];
+                    if(is_array($json) && array_key_exists('message', $json)) $response = $json['message'];
                     throw new Exception($response, $headers['http_code']);
                 }
             }
