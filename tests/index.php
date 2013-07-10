@@ -9,6 +9,7 @@ use \SumoCoders\Factr\Client\Client;
 use \SumoCoders\Factr\Client\Address;
 use \SumoCoders\Factr\Invoice\Invoice;
 use \SumoCoders\Factr\Invoice\Item;
+use \SumoCoders\Factr\Invoice\Payment;
 
 // create instance
 $factr = new Factr();
@@ -42,14 +43,22 @@ $client->setInvoiceableBySnailMail(false);
 $client->setInvoiceableByFactr(false);
 
 $item = new Item();
+$item->setAmount(12);
 $item->setDescription('just an item');
-$item->setPrice(123.45);
-$item->setAmount(67);
+$item->setPrice(34.56);
 $item->setVat(21);
 
+$payment = new Payment();
+$payment->setAmount(12.34);
+$payment->setIdentifier('identifier');
+$payment->setPaidAt(new DateTime('@' . mktime(12, 13, 14, 6, 20, 2014)));
+
 $invoice = new Invoice();
-$invoice->setClient($factr->clientsGet(2292));
 $invoice->addItem($item);
+$invoice->setClientId(2292);
+$invoice->setDescription('description');
+$invoice->setShownRemark('shown_remark');
+$invoice->setState('created');
 
 try {
 //    $response = $factr->accountApiToken(USERNAME, PASSWORD);
@@ -66,7 +75,7 @@ try {
 //    $response = $factr->invoicesGetByIid('IV08004');
 //    $response = $factr->invoicesCreate($invoice);
 //    $response = $factr->invoiceSendByMail(5261, 'foo@bar.com');
-//    $response = $factr->invoicesAddPayment(5261, 123.45);
+//    $response = $factr->invoicesAddPayment(5261, $payment);
 } catch (Exception $e) {
     var_dump($e);
 }
