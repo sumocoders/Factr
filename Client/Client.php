@@ -381,9 +381,10 @@ class Client
     /**
      * Converts the object into an array
      *
+     * @param  bool[optional] $forApi Will the result be used in the API?
      * @return array
      */
-    public function toArray()
+    public function toArray($forApi = false)
     {
         $data = array();
 
@@ -394,16 +395,17 @@ class Client
         $data['company'] = $this->getCompany();
         $data['vat'] = $this->getVat();
         $address = $this->getCompanyAddress();
-        if($address !== null) $data['company_address'] = $address->toArray();
+        if($address !== null) $data['company_address'] = $address->toArray($forApi);
         $address = $this->getBillingAddress();
-        if($address !== null) $data['billing_address'] = $address->toArray();
+        if($address !== null) $data['billing_address'] = $address->toArray($forApi);
         // @todo this is a bug in the API, so for now we just send the first email address
         $addresses = $this->getEmail();
         if(!empty($addresses)) $data['email'] = $addresses[0];
         $data['email'] = $addresses;
         $data['fax'] = $this->getFax();
         $data['phone'] = $this->getPhone();
-        $data['cellphone'] = $this->getCellphone();
+        // @todo this is a bug in the API! Providing a cellphone-attribute results in: There was a syntax error in your request. Internal error: unknown attribute: cellphone
+        if(!$forApi) $data['cellphone'] = $this->getCellphone();
         $data['website'] = $this->getWebsite();
         $data['invoiceable_by_email'] = $this->getInvoiceableByEmail();
         $data['invoiceable_by_snailmail'] = $this->getInvoiceableBySnailMail();
