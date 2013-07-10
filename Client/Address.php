@@ -15,7 +15,7 @@ class Address
     /**
      * @var string
      */
-    protected $street, $number, $zip, $city, $country, $countryName;
+    protected $street, $number, $zip, $city, $country, $countryName, $fullAddress;
 
     /**
      * @param string $city
@@ -63,6 +63,22 @@ class Address
     public function getCountryName()
     {
         return $this->countryName;
+    }
+
+    /**
+     * @param string $fullAddress
+     */
+    public function setFullAddress($fullAddress)
+    {
+        $this->fullAddress = $fullAddress;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullAddress()
+    {
+        return $this->fullAddress;
     }
 
     /**
@@ -123,6 +139,7 @@ class Address
     {
         $item = new Address();
 
+        if(isset($data['full_address'])) $item->setFullAddress($data['full_address']);
         if(isset($data['street'])) $item->setStreet($data['street']);
         if(isset($data['number'])) $item->setNumber($data['number']);
         if(isset($data['zip'])) $item->setZip($data['zip']);
@@ -136,12 +153,16 @@ class Address
     /**
      * Converts the object into an array
      *
+     * @param  bool[optional] $forApi Will the result be used in the API?
      * @return array
      */
-    public function toArray()
+    public function toArray($forApi = false)
     {
         $data = array();
 
+        if(!$forApi) $data['fullAddress'] = $this->getFullAddress();
+        // @todo this is a bug in the API! Providing a full_address-attribute results in: There was a syntax error in your request. Internal error: unknown attribute: full_address
+//	    else $data['full_address'] = $this->getFullAddress();
         $data['street'] = $this->getStreet();
         $data['number'] = $this->getNumber();
         $data['zip'] = $this->getZip();
