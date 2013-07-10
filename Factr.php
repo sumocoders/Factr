@@ -135,12 +135,13 @@ class Factr
     /**
      * Make the call
      *
-     * @param  string           $url        The URL to call.
-     * @param  array            $parameters The parameters that should be passed.
-     * @param  string[optional] $method     Which method should be used? Possible values are: GET, POST.
+     * @param  string           $url           The URL to call.
+     * @param  array[optional]  $parameters    The parameters that should be passed.
+     * @param  string[optional] $method        Which method should be used? Possible values are: GET, POST, DELETE, PUT.
+     * @param  bool[optional]   $returnHeaders Return the headers instead of the data?
      * @return array
      */
-    private function doCall($url, array $parameters = null, $method = 'GET')
+    private function doCall($url, array $parameters = null, $method = 'GET', $returnHeaders = false)
     {
         // redefine
         $url = (string) $url;
@@ -169,7 +170,13 @@ class Factr
             $data = preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $data);
 
             $options[CURLOPT_POSTFIELDS] = $data;
-        }
+        } elseif ($method == 'DELETE') {
+            unset($options[CURLOPT_HTTPHEADER]);
+            unset($options[CURLOPT_POST]);
+            unset($options[CURLOPT_POSTFIELDS]);
+
+            $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+        } else throw new Exception('Unsupported method (' . $method . ')');
 
         // prepend
         $url = self::API_URL . '/' . self::API_VERSION . '/' . $url;
@@ -224,7 +231,10 @@ class Factr
         // error?
         if($errorNumber != '') throw new Exception($errorMessage, $errorNumber);
 
-        // we expect JSON so decode it
+        // return the headers if needed
+        if($returnHeaders) return $headers;
+
+            // we expect JSON so decode it
         $json = @json_decode($response, true);
 
         // validate json
