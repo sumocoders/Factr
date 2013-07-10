@@ -221,7 +221,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->setCompanyAddress($address);
         $client->setRemarks('Created by the Wrapperclass. ' . time());
 
-        $response = $this->factr->clientsCreate($client);
+        $client = $this->factr->clientsCreate($client);
 
         $item = new \SumoCoders\Factr\Invoice\Item();
         $item->setDescription('just an item');
@@ -230,20 +230,21 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setClient($this->factr->clientsGet($response->getId()));
+        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 
-        $response = $this->factr->invoicesCreate($invoice);
+        $invoice = $this->factr->invoicesCreate($invoice);
 
         $payment = new \SumoCoders\Factr\Invoice\Payment();
         $payment->setAmount(10);
 
-        $response = $this->factr->invoicesAddPayment($response->getId(), $payment);
+        $response = $this->factr->invoicesAddPayment($invoice->getId(), $payment);
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Payment', $response);
 
         // cleanup
+        $this->factr->invoicesDelete($invoice->getId());
         $this->factr->clientsDelete($client->getId());
-        // @todo    remove invoice
     }
 
     /**
@@ -266,7 +267,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->setCompanyAddress($address);
         $client->setRemarks('Created by the Wrapperclass. ' . time());
 
-        $response = $this->factr->clientsCreate($client);
+        $client = $this->factr->clientsCreate($client);
 
         $item = new \SumoCoders\Factr\Invoice\Item();
         $item->setDescription('just an item');
@@ -275,11 +276,17 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setClient($this->factr->clientsGet($response->getId()));
+        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 
-        $response = $this->factr->invoicesCreate($invoice);
-        $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $response);
+        $invoice = $this->factr->invoicesCreate($invoice);
+        $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $invoice);
+
+        // cleanup
+        $this->factr->invoicesDelete($invoice->getId());
+        $this->factr->clientsDelete($client->getId());
+    }
 
     /**
      * Tests Factr->invoicesDelete
@@ -352,6 +359,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
+        $invoice->setDescription('Created by the Wrapperclass. ' . time());
         $invoice->setClient($this->factr->clientsGet($response->getId()));
         $invoice->addItem($item);
 
@@ -361,8 +369,8 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Mail', $response);
 
         // cleanup
+        $this->factr->invoicesDelete($invoice->getId());
         $this->factr->clientsDelete($client->getId());
-        // @todo    remove invoice
     }
 
     /**
@@ -385,7 +393,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->setCompanyAddress($address);
         $client->setRemarks('Created by the Wrapperclass. ' . time());
 
-        $response = $this->factr->clientsCreate($client);
+        $client = $this->factr->clientsCreate($client);
 
         $item = new \SumoCoders\Factr\Invoice\Item();
         $item->setDescription('just an item');
@@ -394,17 +402,18 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setClient($this->factr->clientsGet($response->getId()));
+        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 
-        $response = $this->factr->invoicesCreate($invoice);
+        $invoice = $this->factr->invoicesCreate($invoice);
 
-        $response = $this->factr->invoicesGet($response->getId());
+        $response = $this->factr->invoicesGet($invoice->getId());
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $response);
 
         // cleanup
+        $this->factr->invoicesDelete($invoice->getId());
         $this->factr->clientsDelete($client->getId());
-        // @todo    remove invoice
     }
 
     /**
@@ -427,7 +436,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->setCompanyAddress($address);
         $client->setRemarks('Created by the Wrapperclass. ' . time());
 
-        $response = $this->factr->clientsCreate($client);
+        $client = $this->factr->clientsCreate($client);
 
         $item = new \SumoCoders\Factr\Invoice\Item();
         $item->setDescription('just an item');
@@ -436,18 +445,19 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setClient($this->factr->clientsGet($response->getId()));
+        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 
-        $response = $this->factr->invoicesCreate($invoice);
-        $this->factr->invoiceSendByMail($response->getId());
-        $response = $this->factr->invoicesGet($response->getId());
+        $invoice = $this->factr->invoicesCreate($invoice);
+        $this->factr->invoiceSendByMail($invoice->getId());
+        $invoice = $this->factr->invoicesGet($invoice->getId());
 
-        $response = $this->factr->invoicesGetByIid($response->getIid());
+        $response = $this->factr->invoicesGetByIid($invoice->getIid());
         $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $response);
 
         // cleanup
+        $this->factr->invoicesDelete($invoice->getId());
         $this->factr->clientsDelete($client->getId());
-        // @todo    remove invoice
     }
 }
