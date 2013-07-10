@@ -92,7 +92,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $response = $this->factr->clientsCreate($client);
 
@@ -120,11 +120,11 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $response = $this->factr->clientsCreate($client);
         $id = $response->getId();
-        $client->setRemarks('Updated by the Wrappercass. ' . time());
+        $client->setRemarks('Updated by the Wrapper-class. ' . time());
         $response = $this->factr->clientsUpdate($id, $client);
 
         $this->assertTrue($response);
@@ -151,7 +151,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $response = $this->factr->clientsCreate($client);
         $response = $this->factr->clientsDelete($response->getId());
@@ -177,7 +177,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $response = $this->factr->clientsCreate($client);
         $id = $response->getId();
@@ -236,7 +236,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $client = $this->factr->clientsCreate($client);
 
@@ -247,7 +247,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setDescription('Created by the Wrapper-class. ' . time());
         $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 
@@ -282,7 +282,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $client = $this->factr->clientsCreate($client);
 
@@ -293,7 +293,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setDescription('Created by the Wrapper-class. ' . time());
         $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 
@@ -323,7 +323,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $client = $this->factr->clientsCreate($client);
 
@@ -334,12 +334,12 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setDescription('Created by the Wrapper-class. ' . time());
         $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 
         $invoice = $this->factr->invoicesCreate($invoice);
-        $invoice->setDescription('Updated by the Wrappercass. ' . time());
+        $invoice->setDescription('Updated by the Wrapper-class. ' . time());
         $response = $this->factr->invoicesUpdate($invoice->getId(), $invoice);
 
         $this->assertTrue($response);
@@ -367,7 +367,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $client = $this->factr->clientsCreate($client);
 
@@ -378,7 +378,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setDescription('Created by the Wrapper-class. ' . time());
         $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 
@@ -409,7 +409,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $response = $this->factr->clientsCreate($client);
 
@@ -420,7 +420,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setDescription('Created by the Wrapper-class. ' . time());
         $invoice->setClient($this->factr->clientsGet($response->getId()));
         $invoice->addItem($item);
 
@@ -452,7 +452,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $client = $this->factr->clientsCreate($client);
 
@@ -463,7 +463,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setDescription('Created by the Wrapper-class. ' . time());
         $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 
@@ -495,7 +495,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->addEmail('php-factr@verkoyen.eu');
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
-        $client->setRemarks('Created by the Wrapperclass. ' . time());
+        $client->setRemarks('Created by the Wrapper-class. ' . time());
 
         $client = $this->factr->clientsCreate($client);
 
@@ -506,7 +506,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $item->setVat(21);
 
         $invoice = new \SumoCoders\Factr\Invoice\Invoice();
-        $invoice->setDescription('Created by the Wrapperclass. ' . time());
+        $invoice->setDescription('Created by the Wrapper-class. ' . time());
         $invoice->setClient($this->factr->clientsGet($client->getId()));
         $invoice->addItem($item);
 

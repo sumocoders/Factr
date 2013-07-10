@@ -305,16 +305,6 @@ class Factr
         $this->userAgent = (string) $userAgent;
     }
 
-    /**
-     * Set the username
-     *
-     * @param string $username
-     */
-    public function setUsername($username)
-    {
-        $this->username = (string) $username;
-    }
-
 // account methods
     /**
      * Get an API token

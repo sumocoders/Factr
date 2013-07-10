@@ -208,14 +208,6 @@ class Invoice
     }
 
     /**
-     * @param array $payments
-     */
-    private function setPayments($payments)
-    {
-        $this->payments = $payments;
-    }
-
-    /**
      * @return array
      */
     public function getPayments()
