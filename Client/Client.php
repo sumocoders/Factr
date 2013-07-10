@@ -183,7 +183,7 @@ class Client
     /**
      * @param int $id
      */
-    public function setId($id)
+    private function setId($id)
     {
         $this->id = (int) $id;
     }
