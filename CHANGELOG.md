@@ -1,0 +1,9 @@
+# Changelog since 2.1.0
+
+* Altered the class to reflect changes in the API
+
+# Changelog since 1.0.0
+
+* Made the class available through composer
+* Made it compliant with PSR
+* Code styling
