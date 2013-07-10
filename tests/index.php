@@ -55,7 +55,7 @@ $payment->setPaidAt(new DateTime('@' . mktime(12, 13, 14, 6, 20, 2014)));
 
 $invoice = new Invoice();
 $invoice->addItem($item);
-$invoice->setClientId(2292);
+$invoice->setClientId(3026);
 $invoice->setDescription('description');
 $invoice->setShownRemark('shown_remark');
 $invoice->setState('created');
@@ -72,9 +72,11 @@ try {
 //    $response = $factr->clientsInvoices(2703);
 
 //    $response = $factr->invoices();
-//    $response = $factr->invoicesGet(5261);
+//    $response = $factr->invoicesGet(9256);
 //    $response = $factr->invoicesGetByIid('IV08004');
 //    $response = $factr->invoicesCreate($invoice);
+//    $invoice->setDescription('Updated by the wrapper class');
+//    $response = $factr->invoicesUpdate(9256, $invoice);
 //    $response = $factr->invoiceSendByMail(5261, 'foo@bar.com');
 //    $response = $factr->invoicesAddPayment(5261, $payment);
 //    $response = $factr->invoicesDelete($response->getId());

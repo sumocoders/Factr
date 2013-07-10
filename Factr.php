@@ -524,6 +524,21 @@ class Factr
     }
 
     /**
+     * Update an existing invoice
+     *
+     * @param  string  $id
+     * @param  Invoice $invoice
+     * @return bool
+     */
+    public function invoicesUpdate($id, Invoice $invoice)
+    {
+        $parameters['invoice'] = $invoice->toArray(true);
+        $rawData = $this->doCall('invoices/' . (string) $id . '.json', $parameters, 'PUT', true);
+
+        return ($rawData['http_code'] == 204);
+    }
+
+    /**
      * Delete an invoice
      *
      * @param  int  $id
