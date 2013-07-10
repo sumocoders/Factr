@@ -296,7 +296,7 @@ class Invoice
             }
         }
         if(isset($data['total'])) $item->setTotal($data['total']);
-        if(isset($data['due_date'])) $item->setGenerated(new \DateTime('@' . strtotime($data['due_date'])));
+        if(isset($data['due_date'])) $item->setDueDate(new \DateTime('@' . strtotime($data['due_date'])));
         if (isset($data['history'])) {
             foreach ($data['history'] as $row) {
                 $item->addHistory(History::initializeWithRawData($row));
