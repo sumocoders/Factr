@@ -54,6 +54,7 @@ try {
 //    $response = $factr->clients();
 //    $response = $factr->clientsGet(2292);
 //    $response = $factr->clientsCreate($client);
+//    $response = $factr->clientsDelete(123);
 
 //    $response = $factr->invoices();
 //    $response = $factr->invoicesGet(5261);

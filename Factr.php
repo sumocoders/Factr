@@ -372,10 +372,22 @@ class Factr
     public function clientsCreate(Client $client)
     {
         $parameters['client'] = $client->toArray(true);
-
         $rawData = $this->doCall('clients.json', $parameters, 'POST');
 
         return Client::initializeWithRawData($rawData);
+    }
+
+    /**
+     * Delete a client
+     *
+     * @param  string $id
+     * @return bool
+     */
+    public function clientsDelete($id)
+    {
+        $rawData = $this->doCall('clients/' . (string) $id . '.json', null, 'DELETE', true);
+
+        return ($rawData['http_code'] == 204);
     }
 
 // invoice methods

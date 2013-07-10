@@ -88,7 +88,34 @@ class FactrTest extends PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\SumoCoders\Factr\Client\Client', $response);
 
-        // @todo remove client
+        // cleanup
+        $this->factr->clientsDelete($response->getId());
+    }
+
+    /**
+     * Tests Factr->clientsDelete
+     */
+    public function testClientsDelete()
+    {
+        $address = new \SumoCoders\Factr\Client\Address();
+        $address->setStreet('Kerkstraat');
+        $address->setNumber('108');
+        $address->setZip('9050');
+        $address->setCity('Gentbrugge');
+        $address->setCountry('BE');
+
+        $client = new \SumoCoders\Factr\Client\Client();
+        $client->setFirstName('Tijs');
+        $client->setLastName('Verkoyen');
+        $client->addEmail('php-factr@verkoyen.eu');
+        $client->setBillingAddress($address);
+        $client->setCompanyAddress($address);
+        $client->setRemarks('Created by the Wrapperclass. ' . time());
+
+        $response = $this->factr->clientsCreate($client);
+        $response = $this->factr->clientsDelete($response->getId());
+
+        $this->assertTrue($response);
     }
 
     /**
@@ -112,11 +139,13 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->setRemarks('Created by the Wrapperclass. ' . time());
 
         $response = $this->factr->clientsCreate($client);
-        $response = $this->factr->clientsGet($response->getId());
+        $id = $response->getId();
+        $response = $this->factr->clientsGet($id);
 
         $this->assertInstanceOf('\SumoCoders\Factr\Client\Client', $response);
 
-        // @todo remove client
+        // cleanup
+        $this->factr->clientsDelete($id);
     }
 
     /**
