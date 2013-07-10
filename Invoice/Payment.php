@@ -155,4 +155,27 @@ class Payment
 
         return $item;
     }
+
+    /**
+     * Converts the object into an array
+     *
+     * @param  bool[optional] $forApi Will the result be used in the API?
+     * @return array
+     */
+    public function toArray($forApi = false)
+    {
+        $data = array();
+        $data['id'] = $this->getId();
+        $data['amount'] = $this->getAmount();
+        $data['paid_at'] = $this->getPaidAt()->getTimestamp();
+        $data['created_at'] = $this->getCreatedAt()->getTimestamp();
+        $data['updated_at'] = $this->getUpdatedAt()->getTimestamp();
+        $data['identifier'] = $this->getIdentifier();
+
+        if (!$forApi) {
+            $data['invoice_id'] = $this->getInvoiceId();
+        }
+
+        return $data;
+    }
 }

@@ -24,7 +24,7 @@ class Invoice
     /**
      * @var array
      */
-    protected $items, $payments;
+    protected $items, $payments, $history;
 
     /**
      * @var float
@@ -88,7 +88,7 @@ class Invoice
     /**
      * @param \DateTime $dueDate
      */
-    public function setDueDate($dueDate)
+    private function setDueDate($dueDate)
     {
         $this->dueDate = $dueDate;
     }
@@ -104,7 +104,7 @@ class Invoice
     /**
      * @param \DateTime $generated
      */
-    public function setGenerated($generated)
+    private function setGenerated($generated)
     {
         $this->generated = $generated;
     }
@@ -118,9 +118,33 @@ class Invoice
     }
 
     /**
+     * @param History $history
+     */
+    private function addHistory(History $history)
+    {
+        $this->history[] = $history;
+    }
+
+    /**
+     * @param array $history
+     */
+    public function setHistory($history)
+    {
+        $this->history = $history;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHistory()
+    {
+        return $this->history;
+    }
+
+    /**
      * @param int $id
      */
-    public function setId($id)
+    private function setId($id)
     {
         $this->id = $id;
     }
@@ -136,7 +160,7 @@ class Invoice
     /**
      * @param string $iid
      */
-    public function setIid($iid)
+    private function setIid($iid)
     {
         $this->iid = $iid;
     }
@@ -178,7 +202,7 @@ class Invoice
      *
      * @param Payment $payment
      */
-    public function addPayment(Payment $payment)
+    private function addPayment(Payment $payment)
     {
         $this->payments[] = $payment;
     }
@@ -186,7 +210,7 @@ class Invoice
     /**
      * @param array $payments
      */
-    public function setPayments($payments)
+    private function setPayments($payments)
     {
         $this->payments = $payments;
     }
@@ -234,7 +258,7 @@ class Invoice
     /**
      * @param float $total
      */
-    public function setTotal($total)
+    private function setTotal($total)
     {
         $this->total = $total;
     }
@@ -276,6 +300,11 @@ class Invoice
         }
         if(isset($data['total'])) $item->setTotal($data['total']);
         if(isset($data['due_date'])) $item->setGenerated(new \DateTime('@' . strtotime($data['due_date'])));
+        if (isset($data['history'])) {
+            foreach ($data['history'] as $row) {
+                $item->addHistory(History::initializeWithRawData($row));
+            }
+        }
 
         return $item;
     }

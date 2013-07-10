@@ -498,17 +498,10 @@ class Factr
      */
     public function invoicesCreate(Invoice $invoice)
     {
-        // build parameters
-        $parameters['invoice'] = $invoice->toArray();
-
-        // make the call
+        $parameters['invoice'] = $invoice->toArray(true);
         $rawData = $this->doCall('invoices.json', $parameters, 'POST');
 
-        if (isset($rawData['invoice'])) {
-            return Invoice::initializeWithRawData($rawData['invoice']);
-        }
-
-        return false;
+        return Invoice::initializeWithRawData($rawData);
     }
 
     /**

@@ -69,7 +69,7 @@ class Item
     /**
      * @param int $referenceId
      */
-    public function setReferenceId($referenceId)
+    private function setReferenceId($referenceId)
     {
         $this->referenceId = $referenceId;
     }
@@ -85,7 +85,7 @@ class Item
     /**
      * @param float $totalVat
      */
-    public function setTotalVat($totalVat)
+    private function setTotalVat($totalVat)
     {
         $this->totalVat = (float) $totalVat;
     }
@@ -101,7 +101,7 @@ class Item
     /**
      * @param float $totalWithVat
      */
-    public function setTotalWithVat($totalWithVat)
+    private function setTotalWithVat($totalWithVat)
     {
         $this->totalWithVat = (float) $totalWithVat;
     }
@@ -117,7 +117,7 @@ class Item
     /**
      * @param float $totalWithoutVat
      */
-    public function setTotalWithoutVat($totalWithoutVat)
+    private function setTotalWithoutVat($totalWithoutVat)
     {
         $this->totalWithoutVat = (float) $totalWithoutVat;
     }
