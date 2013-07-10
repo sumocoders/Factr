@@ -195,11 +195,17 @@ class FactrTest extends PHPUnit_Framework_TestCase
     public function testClientsInvoices()
     {
         $response = $this->factr->invoices();
+        $paidInvoice = null;
         foreach ($response as $invoice) {
-            if($invoice->getState() == 'paid')break;
+            if ($invoice->getState() == 'paid') {
+                $paidInvoice = $invoice;
+                break;
+            }
         }
 
-        $response = $this->factr->clientsInvoices($invoice->getClientId());
+        if($paidInvoice === null) $this->markTestSkipped('No paid invoices found');
+
+        $response = $this->factr->clientsInvoices($paidInvoice->getClientId());
         $this->assertInternalType('array', $response);
         foreach ($response as $item) {
             $this->assertInstanceOf('\SumoCoders\Factr\Invoice\Invoice', $item);
