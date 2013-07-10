@@ -176,6 +176,18 @@ class Factr
             unset($options[CURLOPT_POSTFIELDS]);
 
             $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+        } elseif ($method == 'PUT') {
+            $options[CURLOPT_POST] = true;
+
+            // the data should be encoded, and because we can't use numeric
+            // keys for Rails, we replace them.
+            $data = $this->encodeData($parameters);
+            $data = http_build_query($data, null, '&');
+            $data = preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $data);
+
+            $options[CURLOPT_POSTFIELDS] = $data;
+
+            $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
         } else throw new Exception('Unsupported method (' . $method . ')');
 
         // prepend
