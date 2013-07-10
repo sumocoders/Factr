@@ -32,6 +32,9 @@ class Factr
     // current version
     const VERSION = '2.0.0';
 
+    // locale to use
+    const LOCALE = 'en';
+
     /**
      * The token to use
      *
@@ -128,6 +131,10 @@ class Factr
         $method = (string) $method;
         $options = array();
 
+        // add credentials
+        $parameters['api_key'] = $this->getApiToken();
+        $parameters['locale'] = self::LOCALE;
+
         // through GET
         if ($method == 'GET') {
             // remove POST-specific stuff
@@ -135,18 +142,9 @@ class Factr
             unset($options[CURLOPT_POST]);
             unset($options[CURLOPT_POSTFIELDS]);
 
-            // add credentials
-            $parameters['api_key'] = $this->getApiToken();
-
             // build url
             $url .= '?' . http_build_query($parameters, null, '&');
-        }
-
-        // through POST
-        elseif ($method == 'POST') {
-            // add credentials
-            $parameters['api_key'] = $this->getApiToken();
-
+        } elseif ($method == 'POST') {
             // the data should be encoded, and because we can't use numeric
             // keys for Rails, we replace them.
             $data = $this->encodeData($parameters);
@@ -161,15 +159,9 @@ class Factr
             unset($options[CURLOPT_POSTFIELDS]);
             $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
 
-            // add credentials
-            $parameters['api_key'] = $this->getApiToken();
-
             // build url
             $url .= '?' . http_build_query($parameters, null, '&');
         } elseif ($method == 'PUT') {
-            // add credentials
-            $parameters['api_key'] = $this->getApiToken();
-
             // the data should be encoded, and because we can't use numeric
             // keys for Rails, we replace them.
             $data = $this->encodeData($parameters);
