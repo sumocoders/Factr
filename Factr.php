@@ -361,17 +361,11 @@ class Factr
      */
     public function clientsCreate(Client $client)
     {
-        // build parameters
-        $parameters['client'] = $client->toArray();
+        $parameters['client'] = $client->toArray(true);
 
-        // make the call
         $rawData = $this->doCall('clients.json', $parameters, 'POST');
 
-        if (isset($rawData['client'])) {
-            return Client::initializeWithRawData($rawData['client']);
-        }
-
-        return false;
+        return Client::initializeWithRawData($rawData);
     }
 
 // invoice methods
