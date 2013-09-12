@@ -514,6 +514,21 @@ class Factr
     }
 
     /**
+     * Create a new credit note on invoice.
+     *
+     * @param  string  $id
+     * @param  Invoice $creditNote The credit note information.
+     * @return Invoice
+     */
+    public function invoicesCreateCreditNote($id, Invoice $creditNote)
+    {
+        $parameters['credit_note'] = $creditNote->toArray(true);
+        $rawData = $this->doCall('invoices/' . (string) $id . '/credit_notes.json', $parameters, 'POST');
+
+        return Invoice::initializeWithRawData($rawData);
+    }
+
+    /**
      * Update an existing invoice
      *
      * @param  string  $id
