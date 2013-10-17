@@ -595,4 +595,20 @@ class Factr
 
         return Payment::initializeWithRawData($rawData);
     }
+
+    /**
+     * Check if vat is required
+     *
+     * @param string $countryCode
+     * @param boolean $isCompany
+     * @return boolean
+     */
+    public function invoicesVatRequired($countryCode, $isCompany)
+    {
+        $parameters['country_code'] = $countryCode;
+        $parameters['company'] = (bool) $isCompany;
+        $rawData = $this->doCall('invoices/vat_required.json', $parameters);
+
+        return $rawData['vat_required'];
+    }
 }
