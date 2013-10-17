@@ -15,23 +15,7 @@ class Address
     /**
      * @var string
      */
-    protected $street, $number, $zip, $city, $country, $countryName, $fullAddress;
-
-    /**
-     * @param string $city
-     */
-    public function setCity($city)
-    {
-        $this->city = $city;
-    }
-
-    /**
-     * @return string
-     */
-    public function getCity()
-    {
-        return $this->city;
-    }
+    protected $country, $countryName, $fullAddress;
 
     /**
      * @param string $country
@@ -82,54 +66,6 @@ class Address
     }
 
     /**
-     * @param string $number
-     */
-    public function setNumber($number)
-    {
-        $this->number = $number;
-    }
-
-    /**
-     * @return string
-     */
-    public function getNumber()
-    {
-        return $this->number;
-    }
-
-    /**
-     * @param string $street
-     */
-    public function setStreet($street)
-    {
-        $this->street = $street;
-    }
-
-    /**
-     * @return string
-     */
-    public function getStreet()
-    {
-        return $this->street;
-    }
-
-    /**
-     * @param string $zip
-     */
-    public function setZip($zip)
-    {
-        $this->zip = $zip;
-    }
-
-    /**
-     * @return string
-     */
-    public function getZip()
-    {
-        return $this->zip;
-    }
-
-    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -140,10 +76,6 @@ class Address
         $item = new Address();
 
         if(isset($data['full_address'])) $item->setFullAddress($data['full_address']);
-        if(isset($data['street'])) $item->setStreet($data['street']);
-        if(isset($data['number'])) $item->setNumber($data['number']);
-        if(isset($data['zip'])) $item->setZip($data['zip']);
-        if(isset($data['city'])) $item->setCity($data['city']);
         if(isset($data['country'])) $item->setCountry($data['country']);
         if(isset($data['country_name'])) $item->setCountryName($data['country_name']);
 
@@ -160,12 +92,7 @@ class Address
     {
         $data = array();
 
-        // @todo this is a bug in the API! Providing a full_address-attribute results in: There was a syntax error in your request. Internal error: unknown attribute: full_address
-        if(!$forApi) $data['fullAddress'] = $this->getFullAddress();
-        $data['street'] = $this->getStreet();
-        $data['number'] = $this->getNumber();
-        $data['zip'] = $this->getZip();
-        $data['city'] = $this->getCity();
+        $data['address'] = $this->getFullAddress();
         $data['country'] = $this->getCountry();
 
         return $data;
