@@ -421,6 +421,20 @@ class Factr
     }
 
     /**
+     * Check if country is European
+     *
+     * @param $countryCode
+     * @return bool
+     */
+    public function clientsIsEuropean($countryCode)
+    {
+        $parameters['country_code'] = $countryCode;
+        $rawData = $this->doCall('clients/is_european.json', $parameters);
+
+        return $rawData['european'];
+    }
+
+    /**
      * Delete a client
      *
      * @param  string $id The id of the client.
