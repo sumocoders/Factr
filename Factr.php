@@ -625,4 +625,18 @@ class Factr
 
         return $rawData['vat_required'];
     }
+
+    /**
+     * Check if valid vat number
+     *
+     * @param string $vatNumber
+     * @return boolean
+     */
+    public function isValidVat($vatNumber)
+    {
+        $parameters['vat'] = $vatNumber;
+        $rawData = $this->doCall('vat/verify.json', $parameters);
+
+        return $rawData['valid'];
+    }
 }
