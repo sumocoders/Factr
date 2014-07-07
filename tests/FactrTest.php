@@ -36,6 +36,19 @@ class FactrTest extends PHPUnit_Framework_TestCase
     }
 
     /**
+     * @return \SumoCoders\Factr\Client\Address
+     */
+    public function createAddress()
+    {
+        $address = new \SumoCoders\Factr\Client\Address();
+        $address->setFullAddress('Kerkstraat 108 9050 Gentbrugge');
+        $address->setCountry('BE');
+
+        return $address;
+    }
+
+
+    /**
      * Tests Factr->getTimeOut()
      */
     public function testGetTimeOut()
@@ -79,12 +92,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testClientsCreate()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -93,6 +101,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
         $client->setBillingAddress($address);
         $client->setCompanyAddress($address);
         $client->setRemarks('Created by the Wrapper-class. ' . time());
+        $client->setCell('cell');
 
         $response = $this->factr->clientsCreate($client);
 
@@ -107,12 +116,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testClientsUpdate()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -138,12 +142,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testClientsDelete()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -164,12 +163,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testClientsGet()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -229,12 +223,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testInvoicesAddPayment()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -275,12 +264,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testInvoicesCreate()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -316,12 +300,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testInvoicesUpdate()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -360,12 +339,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testInvoicesDelete()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -402,12 +376,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function tesInvoiceSendByMail()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -445,12 +414,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testInvoicesGet()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');
@@ -488,12 +452,7 @@ class FactrTest extends PHPUnit_Framework_TestCase
      */
     public function testInvoicesGetByIid()
     {
-        $address = new \SumoCoders\Factr\Client\Address();
-        $address->setStreet('Kerkstraat');
-        $address->setNumber('108');
-        $address->setZip('9050');
-        $address->setCity('Gentbrugge');
-        $address->setCountry('BE');
+        $address = $this->createAddress();
 
         $client = new \SumoCoders\Factr\Client\Client();
         $client->setFirstName('Tijs');

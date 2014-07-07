@@ -16,12 +16,8 @@ $factr = new Factr();
 $factr->setApiToken(API_TOKEN);
 
 $address = new Address();
-$address->setCity('Gentbrugge');
 $address->setCountry('BE');
 $address->setFullAddress('Kerkstraat 108' . "\n" . '9050 Gentbrugge');
-$address->setNumber('108');
-$address->setStreet('Kerkstraat');
-$address->setZip('9050');
 
 $client = new Client();
 $client->setPaymentDays(30);
