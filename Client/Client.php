@@ -25,7 +25,7 @@ class Client
     protected $cid,
                 $company, $vat,
                 $firstName, $lastName,
-                $phone, $fax, $cellphone,
+                $phone, $fax, $cell,
                 $website,
                 $remarks;
 
@@ -61,19 +61,19 @@ class Client
     }
 
     /**
-     * @param string $cellphone
+     * @param string $cell
      */
-    public function setCellphone($cellphone)
+    public function setCell($cell)
     {
-        $this->cellphone = (string) $cellphone;
+        $this->cell = (string) $cell;
     }
 
     /**
      * @return string
      */
-    public function getCellphone()
+    public function getCell()
     {
-        return $this->cellphone;
+        return $this->cell;
     }
 
     /**
@@ -367,7 +367,8 @@ class Client
         if(isset($data['email'])) $item->setEmail($data['email']);
         if(isset($data['fax'])) $item->setFax($data['fax']);
         if(isset($data['phone'])) $item->setPhone($data['phone']);
-        if(isset($data['cellphone'])) $item->setCellphone($data['cellphone']);
+        if(isset($data['cell'])) $item->setCell($data['cell']);
+        if(isset($data['cellphone'])) $item->setCell($data['cellphone']);   // @remark: kinda stupid the API expects cell, but returns cellphone
         if(isset($data['website'])) $item->setWebsite($data['website']);
         if(isset($data['invoiceable_by_email'])) $item->setInvoiceableByEmail($data['invoiceable_by_email']);
         if(isset($data['invoiceable_by_snailmail'])) $item->setInvoiceableBySnailMail($data['invoiceable_by_snailmail']);
@@ -404,8 +405,7 @@ class Client
         $data['email'] = $addresses;
         $data['fax'] = $this->getFax();
         $data['phone'] = $this->getPhone();
-        // @todo this is a bug in the API! Providing a cellphone-attribute results in: There was a syntax error in your request. Internal error: unknown attribute: cellphone
-        if(!$forApi) $data['cellphone'] = $this->getCellphone();
+        $data['cell'] = $this->getCell();
         $data['website'] = $this->getWebsite();
         $data['invoiceable_by_email'] = $this->getInvoiceableByEmail();
         $data['invoiceable_by_snailmail'] = $this->getInvoiceableBySnailMail();

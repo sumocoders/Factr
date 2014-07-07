@@ -28,7 +28,7 @@ $client->setFirstName('first_name');
 $client->setLastName('last_name');
 $client->setPhone('phone');
 $client->setFax('fax');
-$client->setCellphone('cellphone');     // @remark doesn't work
+$client->setCell('cell');
 $client->setWebsite('website');
 $client->setRemarks('remarks');
 $client->setCompanyAddress($address);
