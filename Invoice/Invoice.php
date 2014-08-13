@@ -42,6 +42,11 @@ class Invoice
     protected $client;
 
     /**
+     * @var string
+     */
+    protected $language;
+
+    /**
      * @param \SumoCoders\Factr\Client\Client $client
      */
     public function setClient(Client $client)
@@ -269,6 +274,22 @@ class Invoice
     }
 
     /**
+     * @param string $language
+     */
+    public function setLanguage($language)
+    {
+        $this->language = $language;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLanguage()
+    {
+        return $this->language;
+    }
+
+    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -302,6 +323,9 @@ class Invoice
                 $item->addHistory(History::initializeWithRawData($row));
             }
         }
+        if (isset($data['language'])) {
+            $item->setLanguage($data['language']);
+        }
 
         return $item;
     }
@@ -323,6 +347,7 @@ class Invoice
         foreach ($this->getItems() as $item) {
             $data['items'][] = $item->toArray($forApi);
         }
+        $data['language'] = $this->getLanguage();
 
         if (!$forApi) {
             $data['id'] = $this->getId();
