@@ -645,6 +645,20 @@ class Factr
     }
 
     /**
+     * Send a reminder for an invoice
+     *
+     * @param string $id The invoice id
+     *
+     * @return array
+     */
+    public function invoiceSendReminder($id)
+    {
+        $rawData = $this->doCall('invoices/' . (string) $id . '/reminders', array(), 'POST');
+
+        return $rawData;
+    }
+
+    /**
      * Check if vat is required
      *
      * @param string $countryCode
