@@ -32,9 +32,6 @@ class Factr
     // current version
     const VERSION = '2.1.0';
 
-    // locale to use
-    const LOCALE = 'en';
-
     /**
      * The token to use
      *
@@ -133,7 +130,6 @@ class Factr
 
         // add credentials
         $parameters['api_key'] = $this->getApiToken();
-        $parameters['locale'] = self::LOCALE;
 
         // through GET
         if ($method == 'GET') {
