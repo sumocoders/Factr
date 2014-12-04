@@ -21,7 +21,7 @@ class Factr
     const DEBUG = false;
 
     // url for the API
-    const API_URL = 'https://app.factr.be/api';
+    const API_URL = 'https://app.defactuur.be/api';
 
     // port for the factr-API
     const API_PORT = 443;
@@ -31,9 +31,6 @@ class Factr
 
     // current version
     const VERSION = '2.1.0';
-
-    // locale to use
-    const LOCALE = 'en';
 
     /**
      * The token to use
@@ -133,7 +130,6 @@ class Factr
 
         // add credentials
         $parameters['api_key'] = $this->getApiToken();
-        $parameters['locale'] = self::LOCALE;
 
         // through GET
         if ($method == 'GET') {
@@ -144,12 +140,11 @@ class Factr
 
             // build url
             $url .= '?' . http_build_query($parameters, null, '&');
+            $url = $this->removeIndexFromArrayParameters($url);
         } elseif ($method == 'POST') {
-            // the data should be encoded, and because we can't use numeric
-            // keys for Rails, we replace them.
             $data = $this->encodeData($parameters);
             $data = http_build_query($data, null, '&');
-            $data = preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $data);
+            $data = $this->removeIndexFromArrayParameters($data);
 
             $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = $data;
@@ -162,11 +157,9 @@ class Factr
             // build url
             $url .= '?' . http_build_query($parameters, null, '&');
         } elseif ($method == 'PUT') {
-            // the data should be encoded, and because we can't use numeric
-            // keys for Rails, we replace them.
             $data = $this->encodeData($parameters);
             $data = http_build_query($data, null, '&');
-            $data = preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $data);
+            $data = $this->removeIndexFromArrayParameters($data);
 
             $options[CURLOPT_POSTFIELDS] = $data;
             $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
@@ -229,7 +222,12 @@ class Factr
         // return the headers if needed
         if($returnHeaders) return $headers;
 
-            // we expect JSON so decode it
+        if (stristr($url, '.pdf')) {
+            // Return pdf contents immediately without tampering with them
+            return $response;
+        }
+
+        // we expect JSON so decode it
         $json = @json_decode($response, true);
 
         // validate json
@@ -240,6 +238,19 @@ class Factr
 
         // return
         return $json;
+    }
+
+    /**
+     * Remove indexes from http array parameters
+     *
+     * The Factr application doesn't like numerical indexes in http parameters too much.
+     * We'll just remove them.
+     *
+     * ?foo[1]=bar becomes ?foo[]=bar
+     */
+    private function removeIndexFromArrayParameters($queryString)
+    {
+        return preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $queryString);
     }
 
     /**
@@ -470,12 +481,40 @@ class Factr
     /**
      * Get a list of all the invoices.
      *
+     * @param array $filters A list of filters
+     *
      * @return array
      */
-    public function invoices()
+    public function invoices(array $filters = null)
     {
+        $parameters = null;
+
+        if (!empty($filters)) {
+            $allowedFilters = array(
+                'sent',
+                'unpaid',
+                'paid',
+                'reminder_sent',
+                'partially_paid',
+                'unset',
+                'juridicial_proceedings',
+                'late'
+            );
+
+            array_walk(
+                (array) $filters,
+                function($filter) use ($allowedFilters) {
+                    if (!in_array($filter, $allowedFilters)) {
+                        throw new \InvalidArgumentException('Invalid filter');
+                    }
+                }
+            );
+
+            $parameters = array('filters' => $filters);
+        }
+
         $invoices = array();
-        $rawData = $this->doCall('invoices.json');
+        $rawData = $this->doCall('invoices.json', $parameters);
         if (!empty($rawData)) {
             foreach ($rawData as $data) {
                 $invoices[] = Invoice::initializeWithRawData($data);
@@ -497,6 +536,24 @@ class Factr
         if(empty($rawData)) return false;
 
         return Invoice::initializeWithRawData($rawData);
+    }
+
+    /**
+     * Get the pdf for an invoice
+     *
+     * @param string $id The id of the invoice.
+     *
+     * @return string Raw PDF contents
+     */
+    public function invoicesGetAsPdf($id)
+    {
+        $rawData = $this->doCall('invoices/' . (string) $id . '.pdf');
+
+        if (empty($rawData)) {
+            return false;
+        }
+
+        return $rawData;
     }
 
     /**
@@ -608,6 +665,20 @@ class Factr
         $rawData = $this->doCall('invoices/' . (string) $id . '/payments.json', $parameters, 'POST');
 
         return Payment::initializeWithRawData($rawData);
+    }
+
+    /**
+     * Send a reminder for an invoice
+     *
+     * @param string $id The invoice id
+     *
+     * @return array
+     */
+    public function invoiceSendReminder($id)
+    {
+        $rawData = $this->doCall('invoices/' . (string) $id . '/reminders', array(), 'POST');
+
+        return $rawData;
     }
 
     /**
