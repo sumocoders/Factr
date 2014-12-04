@@ -21,7 +21,7 @@ class Factr
     const DEBUG = false;
 
     // url for the API
-    const API_URL = 'https://app.factr.be/api';
+    const API_URL = 'https://app.defactuur.be/api';
 
     // port for the factr-API
     const API_PORT = 443;
