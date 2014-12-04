@@ -140,12 +140,11 @@ class Factr
 
             // build url
             $url .= '?' . http_build_query($parameters, null, '&');
+            $url = $this->removeIndexFromArrayParameters($url);
         } elseif ($method == 'POST') {
-            // the data should be encoded, and because we can't use numeric
-            // keys for Rails, we replace them.
             $data = $this->encodeData($parameters);
             $data = http_build_query($data, null, '&');
-            $data = preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $data);
+            $data = $this->removeIndexFromArrayParameters($data);
 
             $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = $data;
@@ -158,11 +157,9 @@ class Factr
             // build url
             $url .= '?' . http_build_query($parameters, null, '&');
         } elseif ($method == 'PUT') {
-            // the data should be encoded, and because we can't use numeric
-            // keys for Rails, we replace them.
             $data = $this->encodeData($parameters);
             $data = http_build_query($data, null, '&');
-            $data = preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $data);
+            $data = $this->removeIndexFromArrayParameters($data);
 
             $options[CURLOPT_POSTFIELDS] = $data;
             $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
@@ -236,6 +233,19 @@ class Factr
 
         // return
         return $json;
+    }
+
+    /**
+     * Remove indexes from http array parameters
+     *
+     * The Factr application doesn't like numerical indexes in http parameters too much.
+     * We'll just remove them.
+     *
+     * ?foo[1]=bar becomes ?foo[]=bar
+     */
+    private function removeIndexFromArrayParameters($queryString)
+    {
+        return preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $queryString);
     }
 
     /**
