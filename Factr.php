@@ -476,12 +476,40 @@ class Factr
     /**
      * Get a list of all the invoices.
      *
+     * @param array $filters A list of filters
+     *
      * @return array
      */
-    public function invoices()
+    public function invoices(array $filters = null)
     {
+        $parameters = null;
+
+        if (!empty($filters)) {
+            $allowedFilters = array(
+                'sent',
+                'unpaid',
+                'paid',
+                'reminder_sent',
+                'partially_paid',
+                'unset',
+                'juridicial_proceedings',
+                'late'
+            );
+
+            array_walk(
+                (array) $filters,
+                function($filter) use ($allowedFilters) {
+                    if (!in_array($filter, $allowedFilters)) {
+                        throw new \InvalidArgumentException('Invalid filter');
+                    }
+                }
+            );
+
+            $parameters = array('filters' => $filters);
+        }
+
         $invoices = array();
-        $rawData = $this->doCall('invoices.json');
+        $rawData = $this->doCall('invoices.json', $parameters);
         if (!empty($rawData)) {
             foreach ($rawData as $data) {
                 $invoices[] = Invoice::initializeWithRawData($data);
