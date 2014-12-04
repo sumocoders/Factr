@@ -222,7 +222,12 @@ class Factr
         // return the headers if needed
         if($returnHeaders) return $headers;
 
-            // we expect JSON so decode it
+        if (stristr($url, '.pdf')) {
+            // Return pdf contents immediately without tampering with them
+            return $response;
+        }
+
+        // we expect JSON so decode it
         $json = @json_decode($response, true);
 
         // validate json
@@ -531,6 +536,24 @@ class Factr
         if(empty($rawData)) return false;
 
         return Invoice::initializeWithRawData($rawData);
+    }
+
+    /**
+     * Get the pdf for an invoice
+     *
+     * @param string $id The id of the invoice.
+     *
+     * @return string Raw PDF contents
+     */
+    public function invoicesGetAsPdf($id)
+    {
+        $rawData = $this->doCall('invoices/' . (string) $id . '.pdf');
+
+        if (empty($rawData)) {
+            return false;
+        }
+
+        return $rawData;
     }
 
     /**
