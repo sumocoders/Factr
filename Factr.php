@@ -143,8 +143,11 @@ class Factr
             $url = $this->removeIndexFromArrayParameters($url);
         } elseif ($method == 'POST') {
             $data = $this->encodeData($parameters);
-            $data = http_build_query($data, null, '&');
-            $data = $this->removeIndexFromArrayParameters($data);
+
+            if ($this->areWeSendingAFile($data) === false) {
+                $data = http_build_query($data, null, '&');
+                $data = $this->removeIndexFromArrayParameters($data);
+            }
 
             $options[CURLOPT_POST] = true;
             $options[CURLOPT_POSTFIELDS] = $data;
@@ -241,16 +244,38 @@ class Factr
     }
 
     /**
+     * Detect from flattened parameter array if we're sending a file
+     *
+     * @param array $parameters The flattened parameter array
+     *
+     * @return bool
+     */
+    private function areWeSendingAFile($parameters)
+    {
+        foreach ($parameters as $key => $value) {
+            if (substr($value, 0, 1) === '@') {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Remove indexes from http array parameters
      *
      * The Factr application doesn't like numerical indexes in http parameters too much.
      * We'll just remove them.
      *
      * ?foo[1]=bar becomes ?foo[]=bar
+     *
+     * @param mixed $query The query string or flattened array
+     *
+     * @return mixed the cleaned up query string or array
      */
-    private function removeIndexFromArrayParameters($queryString)
+    private function removeIndexFromArrayParameters($query)
     {
-        return preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $queryString);
+        return preg_replace('/%5B([0-9]*)%5D/iU', '%5B%5D', $query);
     }
 
     /**
@@ -502,7 +527,7 @@ class Factr
             );
 
             array_walk(
-                (array) $filters,
+                $filters,
                 function($filter) use ($allowedFilters) {
                     if (!in_array($filter, $allowedFilters)) {
                         throw new \InvalidArgumentException('Invalid filter');
@@ -709,5 +734,24 @@ class Factr
         $rawData = $this->doCall('vat/verify.json', $parameters);
 
         return $rawData['valid'];
+    }
+
+    /**
+     * Upload a CODA file and let Factr interpret it
+     *
+     * @param string $filePath The file path
+     *
+     * @return array
+     */
+    public function uploadCodaFile($filePath)
+    {
+        $parameters = array(
+            'file' => '@' . $filePath,
+            'file_type' => 'coda',
+        );
+
+        $rawData = $this->doCall('payments/process_file.json', $parameters, 'POST');
+
+        return $rawData;
     }
 }
