@@ -502,7 +502,7 @@ class Factr
             );
 
             array_walk(
-                (array) $filters,
+                $filters,
                 function($filter) use ($allowedFilters) {
                     if (!in_array($filter, $allowedFilters)) {
                         throw new \InvalidArgumentException('Invalid filter');
