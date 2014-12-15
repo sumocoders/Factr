@@ -693,6 +693,20 @@ class Factr
     }
 
     /**
+     * Send an invoice per mail
+     *
+     * @param string $id The invoice id
+     *
+     * @return array
+     */
+    public function invoiceSendEmail($id)
+    {
+        $rawData = $this->doCall('invoices/' . (string) $id . '/mails', array(), 'POST');
+
+        return $rawData;
+    }
+
+    /**
      * Send a reminder for an invoice
      *
      * @param string $id The invoice id
