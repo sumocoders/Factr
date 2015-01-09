@@ -16,7 +16,7 @@ class Item
     /**
      * @var float
      */
-    protected $amount, $price, $totalWithoutVat, $totalVat, $totalWithVat;
+    protected $amount, $price, $totalWithoutVat, $totalVat, $totalWithVat, $totalWithVat;
 
     /**
      * @var int
@@ -152,6 +152,22 @@ class Item
     }
 
     /**
+     * @param float $vatAmount
+     */
+    public function setTotalVatOverrule($vatAmount)
+    {
+        $this->totalVatOverrule = (float) $vatAmount;
+    }
+
+    /**
+     * @return float
+     */
+    public function getTotalVatOverrule()
+    {
+        return $this->totalVatOverrule;
+    }
+
+    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -186,6 +202,10 @@ class Item
         $data['price'] = $this->getPrice();
         $data['amount'] = $this->getAmount();
         $data['vat'] = $this->getVat();
+
+        if ($this->getTotalVatOverrule()) {
+            $data['total_vat_overrule'] = $this->getTotalVatOverrule();
+        }
 
         if (!$forApi) {
             $data['total_without_vat'] = $this->getTotalWithoutVat();
