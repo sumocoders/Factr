@@ -16,7 +16,7 @@ class Item
     /**
      * @var float
      */
-    protected $amount, $price, $totalWithoutVat, $totalVat, $totalWithVat, $totalWithVat;
+    protected $amount, $price, $totalWithoutVat, $totalVat, $totalWithVat, $totalVatOverrule;
 
     /**
      * @var int
