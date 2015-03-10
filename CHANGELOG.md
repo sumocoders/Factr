@@ -3,6 +3,8 @@
 * Altered the class to reflect changes in the API
 * Added clients/is_european call to check if country is an European country
 * Added isVatValid call to check if VAT number is valid
+* ...
+* Changed endpoint to https://app.defactuur.be/api
 
 # Changelog since 1.0.0
 
