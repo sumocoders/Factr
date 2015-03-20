@@ -24,7 +24,7 @@ class Invoice
     /**
      * @var \DateTime
      */
-    protected $generated, $dueDate;
+    protected $generated, $dueDate, $fullyPaidAt;
 
     /**
      * @var array
@@ -109,6 +109,22 @@ class Invoice
     public function getDueDate()
     {
         return $this->dueDate;
+    }
+
+    /**
+     * @param \DateTime $fullyPaidAt
+     */
+    private function setFullyPaidAt(\DateTime $fullyPaidAt)
+    {
+        $this->fullyPaidAt = $fullyPaidAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+    public function getFullyPaidAt()
+    {
+        return $this->fullyPaidAt;
     }
 
     /**
@@ -318,6 +334,7 @@ class Invoice
         }
         if(isset($data['total'])) $item->setTotal($data['total']);
         if(isset($data['due_date'])) $item->setDueDate(new \DateTime('@' . strtotime($data['due_date'])));
+        if(isset($data['fully_paid_at'])) $item->setFullyPaidAt(new \DateTime('@' . strtotime($data['fully_paid_at'])));
         if (isset($data['history'])) {
             foreach ($data['history'] as $row) {
                 $item->addHistory(History::initializeWithRawData($row));
