@@ -17,7 +17,7 @@ class Client
     /**
      * @var int
      */
-    protected $id, $paymentDays;
+    protected $id, $paymentDays, $replacedById;
 
     /**
      * @var string
@@ -341,6 +341,22 @@ class Client
     }
 
     /**
+     * @return int
+     */
+    public function getReplacedById()
+    {
+        return $this->replacedById;
+    }
+
+    /**
+     * @param int $replacedById
+     */
+    public function setReplacedById($replacedById)
+    {
+        $this->replacedById = $replacedById;
+    }
+
+    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -375,6 +391,7 @@ class Client
         if(isset($data['invoiceable_by_factr'])) $item->setInvoiceableByFactr($data['invoiceable_by_factr']);
         if(isset($data['payment_days'])) $item->setPaymentDays($data['payment_days']);
         if(isset($data['remarks'])) $item->setRemarks($data['remarks']);
+        if(isset($data['replaced_by_id'])) $item->setReplacedById($data['replaced_by_id']);
 
         return $item;
     }
@@ -412,6 +429,7 @@ class Client
         $data['invoiceable_by_factr'] = $this->getInvoiceableByFactr();
         $data['payment_days'] = $this->getPaymentDays();
         $data['remarks'] = $this->getRemarks();
+        $data['replaced_by_id'] = $this->getReplacedById();
 
         return $data;
     }
