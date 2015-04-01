@@ -484,6 +484,22 @@ class Factr
     }
 
     /**
+     * Disable client in favour of another client
+     *
+     * @param $id
+     * @param $replacedById
+     *
+     * @return bool
+     */
+    public function clientsDisable($id, $replacedById)
+    {
+        $parameters['replaced_by_id'] = $replacedById;
+        $rawData = $this->doCall('clients/' . (string) $id . '/disable.json', $parameters, 'POST', true);
+
+        return ($rawData['http_code'] == 201);
+    }
+
+    /**
      * Get the invoices for a client
      *
      * @param  int   $id
