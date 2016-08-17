@@ -30,7 +30,7 @@ class Factr
     const API_VERSION = 'v1';
 
     // current version
-    const VERSION = '2.2.0';
+    const VERSION = '2.4.0';
 
     /**
      * The token to use
@@ -428,7 +428,7 @@ class Factr
     }
 
     /**
-     * Get all of the available information for a single client. You 'll need the id of the client.
+     * Get all clients that are linked to an email address
      *
      * @param  string $email The email of the client.
      * @return Client[]

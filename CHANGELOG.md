@@ -1,3 +1,7 @@
+# changelog 2.4
+
+* Added the option to get clients by email
+
 # Changelog since 2.1.0
 
 * Altered the class to reflect changes in the API
