@@ -428,6 +428,27 @@ class Factr
     }
 
     /**
+     * Get all of the available information for a single client. You 'll need the id of the client.
+     *
+     * @param  string $email The email of the client.
+     * @return Client[]
+     */
+    public function clientsGetByEmail($email)
+    {
+        $rawData = $this->doCall('clients.json', array('email' => $email));
+        if (empty($rawData)) {
+            return false;
+        }
+
+        return array_map(
+            function (array $clientData) {
+                return Client::initializeWithRawData($clientData);
+            },
+            $rawData
+        );
+    }
+
+    /**
      * Create a new client.
      *
      * @param  Client      $client The information of the client.
