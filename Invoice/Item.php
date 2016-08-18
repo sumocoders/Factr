@@ -24,6 +24,21 @@ class Item
     protected $vat, $referenceId;
 
     /**
+     * @var float
+     */
+    protected $discount;
+
+    /**
+     * @var bool
+     */
+    protected $discountIsPercentage = false;
+
+    /**
+     * @var string
+     */
+    protected $discountDescription;
+
+    /**
      * @param float $amount
      */
     public function setAmount($amount)
@@ -168,6 +183,63 @@ class Item
     }
 
     /**
+     * @return float
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @param float $discount
+     * @return self
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDiscountAPercentage()
+    {
+        return $this->discountIsPercentage;
+    }
+
+    /**
+     * @param boolean $discountIsPercentage
+     * @return self
+     */
+    public function setDiscountIsPercentage($discountIsPercentage)
+    {
+        $this->discountIsPercentage = $discountIsPercentage;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDiscountDescription()
+    {
+        return $this->discountDescription;
+    }
+
+    /**
+     * @param string $discountDescription
+     * @return self
+     */
+    public function setDiscountDescription($discountDescription)
+    {
+        $this->discountDescription = $discountDescription;
+
+        return $this;
+    }
+
+    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -185,6 +257,9 @@ class Item
         if(isset($data['total_without_vat'])) $item->setTotalWithoutVat($data['total_without_vat']);
         if(isset($data['total_vat'])) $item->setTotalVat($data['total_vat']);
         if(isset($data['total_with_vat'])) $item->setTotalWithVat($data['total_with_vat']);
+        if(isset($data['discount'])) $item->setDiscount($data['discount']);
+        if(isset($data['percentage'])) $item->setDiscountIsPercentage($data['percentage']);
+        if(isset($data['discount_description'])) $item->setDiscountDescription($data['discount_description']);
 
         return $item;
     }
@@ -202,6 +277,11 @@ class Item
         $data['price'] = $this->getPrice();
         $data['amount'] = $this->getAmount();
         $data['vat'] = $this->getVat();
+        if (!empty($this->getDiscount())) {
+            $data['discount'] = $this->getDiscount();
+            $data['percentage'] = $this->isDiscountAPercentage();
+            $data['discount_description'] = $this->getDiscountDescription();
+        }
 
         if ($this->getTotalVatOverrule()) {
             $data['total_vat_overrule'] = $this->getTotalVatOverrule();

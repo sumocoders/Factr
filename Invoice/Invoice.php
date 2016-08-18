@@ -47,6 +47,21 @@ class Invoice
     protected $language;
 
     /**
+     * @var float
+     */
+    protected $discount;
+
+    /**
+     * @var bool
+     */
+    protected $discountIsPercentage = false;
+
+    /**
+     * @var string
+     */
+    protected $discountDescription;
+
+    /**
      * @param \SumoCoders\Factr\Client\Client $client
      */
     public function setClient(Client $client)
@@ -306,6 +321,63 @@ class Invoice
     }
 
     /**
+     * @return float
+     */
+    public function getDiscount()
+    {
+        return $this->discount;
+    }
+
+    /**
+     * @param float $discount
+     * @return self
+     */
+    public function setDiscount($discount)
+    {
+        $this->discount = $discount;
+
+        return $this;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function isDiscountAPercentage()
+    {
+        return $this->discountIsPercentage;
+    }
+
+    /**
+     * @param boolean $discountIsPercentage
+     * @return self
+     */
+    public function setDiscountIsPercentage($discountIsPercentage)
+    {
+        $this->discountIsPercentage = $discountIsPercentage;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDiscountDescription()
+    {
+        return $this->discountDescription;
+    }
+
+    /**
+     * @param string $discountDescription
+     * @return self
+     */
+    public function setDiscountDescription($discountDescription)
+    {
+        $this->discountDescription = $discountDescription;
+
+        return $this;
+    }
+
+    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -333,6 +405,9 @@ class Invoice
             }
         }
         if(isset($data['total'])) $item->setTotal($data['total']);
+        if(isset($data['discount'])) $item->setDiscount($data['discount']);
+        if(isset($data['percentage'])) $item->setDiscountIsPercentage($data['percentage']);
+        if(isset($data['discount_description'])) $item->setDiscountDescription($data['discount_description']);
         if(isset($data['due_date'])) $item->setDueDate(new \DateTime('@' . strtotime($data['due_date'])));
         if(isset($data['fully_paid_at'])) $item->setFullyPaidAt(new \DateTime('@' . strtotime($data['fully_paid_at'])));
         if (isset($data['history'])) {
@@ -360,6 +435,12 @@ class Invoice
         $data['state'] = $this->getState();
         $data['description'] = $this->getDescription();
         $data['shown_remark'] = $this->getShownRemark();
+        if (!empty($this->getDiscount())) {
+            $data['discount'] = $this->getDiscount();
+            $data['percentage'] = $this->isDiscountAPercentage();
+            $data['discount_description'] = $this->getDiscountDescription();
+        }
+
         $data['items'] = array();
         foreach ($this->getItems() as $item) {
             $data['items'][] = $item->toArray($forApi);
