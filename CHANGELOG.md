@@ -1,3 +1,7 @@
+# changelog 2.5
+
+* Added the option to set/get the discount of an invoice or invoice item
+
 # changelog 2.4
 
 * Added the option to get clients by email
