@@ -30,7 +30,7 @@ class Factr
     const API_VERSION = 'v1';
 
     // current version
-    const VERSION = '2.5.0';
+    const VERSION = '2.5.1';
 
     /**
      * The token to use

@@ -435,7 +435,8 @@ class Invoice
         $data['state'] = $this->getState();
         $data['description'] = $this->getDescription();
         $data['shown_remark'] = $this->getShownRemark();
-        if (!empty($this->getDiscount())) {
+        $discount = $this->getDiscount();
+        if (!empty($discount)) {
             $data['discount'] = $this->getDiscount();
             $data['percentage'] = $this->isDiscountAPercentage();
             $data['discount_description'] = $this->getDiscountDescription();

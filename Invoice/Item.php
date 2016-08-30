@@ -277,7 +277,8 @@ class Item
         $data['price'] = $this->getPrice();
         $data['amount'] = $this->getAmount();
         $data['vat'] = $this->getVat();
-        if (!empty($this->getDiscount())) {
+        $discount = $this->getDiscount();
+        if (!empty($discount)) {
             $data['discount'] = $this->getDiscount();
             $data['percentage'] = $this->isDiscountAPercentage();
             $data['discount_description'] = $this->getDiscountDescription();
