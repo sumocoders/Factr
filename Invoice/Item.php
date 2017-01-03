@@ -11,7 +11,7 @@ class Item
     /**
      * @var string
      */
-    protected $description;
+    protected $description, $externalProductId;
 
     /**
      * @var float
@@ -240,6 +240,22 @@ class Item
     }
 
     /**
+     * @return string
+     */
+    public function getExternalProductId()
+    {
+        return $this->externalProductId;
+    }
+
+    /**
+     * @param string $externalProductId
+     */
+    public function setExternalProductId($externalProductId)
+    {
+        $this->externalProductId = $externalProductId;
+    }
+
+    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -260,6 +276,7 @@ class Item
         if(isset($data['discount'])) $item->setDiscount($data['discount']);
         if(isset($data['percentage'])) $item->setDiscountIsPercentage($data['percentage']);
         if(isset($data['discount_description'])) $item->setDiscountDescription($data['discount_description']);
+        if(isset($data['external_product_id'])) $item->setExternalProductId($data['external_product_id']);
 
         return $item;
     }
@@ -283,6 +300,7 @@ class Item
             $data['percentage'] = $this->isDiscountAPercentage();
             $data['discount_description'] = $this->getDiscountDescription();
         }
+        $data['external_product_id'] = $this->getExternalProductId();
 
         if ($this->getTotalVatOverrule()) {
             $data['total_vat_overrule'] = $this->getTotalVatOverrule();
