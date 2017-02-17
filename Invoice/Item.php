@@ -151,15 +151,15 @@ class Item
     }
 
     /**
-     * @param int $vat
+     * @param int|null $vat
      */
-    public function setVat($vat)
+    public function setVat($vat = null)
     {
-        $this->vat = (int) $vat;
+        $this->vat = ($vat === null) ? null : (int) $vat;
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getVat()
     {
@@ -293,7 +293,7 @@ class Item
         $data['description'] = $this->getDescription();
         $data['price'] = $this->getPrice();
         $data['amount'] = $this->getAmount();
-        $data['vat'] = $this->getVat();
+        $data['vat'] = ($forApi && $this->getVat() === null) ? '' : $this->getVat();
         $discount = $this->getDiscount();
         if (!empty($discount)) {
             $data['discount'] = $this->getDiscount();
