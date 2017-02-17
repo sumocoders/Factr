@@ -293,7 +293,7 @@ class Item
         $data['description'] = $this->getDescription();
         $data['price'] = $this->getPrice();
         $data['amount'] = $this->getAmount();
-        $data['vat'] = $this->getVat();
+        $data['vat'] = ($forApi && $this->getVat() === null) ? '' : $this->getVat();
         $discount = $this->getDiscount();
         if (!empty($discount)) {
             $data['discount'] = $this->getDiscount();
