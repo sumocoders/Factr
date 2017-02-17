@@ -153,9 +153,9 @@ class Item
     /**
      * @param int $vat
      */
-    public function setVat($vat)
+    public function setVat($vat = null)
     {
-        $this->vat = (int) $vat;
+        $this->vat = ($vat === null) ? null : (int) $vat;
     }
 
     /**
