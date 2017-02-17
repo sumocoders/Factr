@@ -151,7 +151,7 @@ class Item
     }
 
     /**
-     * @param int $vat
+     * @param int|null $vat
      */
     public function setVat($vat = null)
     {
@@ -159,7 +159,7 @@ class Item
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getVat()
     {
