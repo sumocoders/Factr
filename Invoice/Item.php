@@ -39,7 +39,7 @@ class Item
     protected $discountDescription;
 
     /**
-     * @var int
+     * @var int|null
      */
     protected $productId;
 
@@ -261,7 +261,7 @@ class Item
     }
 
     /**
-     * @param int $productId
+     * @param int|null $productId
      */
     public function setProductId($productId)
     {
@@ -269,7 +269,7 @@ class Item
     }
 
     /**
-     * @return int
+     * @return int|null
      */
     public function getProductId()
     {
