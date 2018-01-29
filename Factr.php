@@ -6,6 +6,7 @@ use SumoCoders\Factr\Client\Client;
 use SumoCoders\Factr\Invoice\Invoice;
 use SumoCoders\Factr\Invoice\Mail;
 use SumoCoders\Factr\Invoice\Payment;
+use SumoCoders\Factr\Product\Product;
 
 /**
  * Factr class
@@ -790,5 +791,52 @@ class Factr
         $rawData = $this->doCall('payments/process_file.json', $parameters, 'POST');
 
         return $rawData;
+    }
+
+    /**
+     * @return array
+     */
+    public function products()
+    {
+        $products = array();
+        $rawData = $this->doCall('products.json');
+
+        if (!empty($rawData)) {
+            foreach ($rawData as $data) {
+                $products[] = Product::initializeWithRawData($data);
+            }
+        }
+
+        return $products;
+    }
+
+    /**
+     * @param int $id
+     *
+     * @return Invoice|bool
+     */
+    public function productsGet($id)
+    {
+        $rawData = $this->doCall('products/' . (string) $id . '.json');
+
+        if (empty($rawData)) {
+            return false;
+        }
+
+        return Product::initializeWithRawData($rawData);
+    }
+
+    /**
+     * @param Product $product
+     *
+     * @return Product
+     */
+    public function productsCreate(Product $product)
+    {
+        $parameters['product'] = $product->toArray();
+
+        $rawData = $this->doCall('products.json', $parameters, 'POST');
+
+        return Product::initializeWithRawData($rawData);
     }
 }
