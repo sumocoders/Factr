@@ -825,4 +825,18 @@ class Factr
 
         return Product::initializeWithRawData($rawData);
     }
+
+    /**
+     * @param Product $product
+     *
+     * @return Product
+     */
+    public function productsCreate(Product $product)
+    {
+        $parameters['product'] = $product->toArray();
+
+        $rawData = $this->doCall('products.json', $parameters, 'POST');
+
+        return Product::initializeWithRawData($rawData);
+    }
 }
