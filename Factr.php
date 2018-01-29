@@ -809,4 +809,20 @@ class Factr
 
         return $products;
     }
+
+    /**
+     * @param int $id
+     *
+     * @return Invoice|bool
+     */
+    public function productsGet($id)
+    {
+        $rawData = $this->doCall('products/' . (string) $id . '.json');
+
+        if (empty($rawData)) {
+            return false;
+        }
+
+        return Product::initializeWithRawData($rawData);
+    }
 }
