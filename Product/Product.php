@@ -42,9 +42,7 @@ final class Product
         $this->description = $description;
         $this->price = $price;
         $this->vat = $vat;
-        if ($id !== null) {
-            $this->id = $id;
-        }
+        $this->id = $id;
     }
 
     /**
