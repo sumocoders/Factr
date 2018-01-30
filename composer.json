@@ -3,7 +3,7 @@
 	"type": "library",
 	"description": "PHP Factr is a (wrapper)class to communicate with Factr (http://www.factr.be).",
 	"homepage": "https://github.com/sumocoders/Factr",
-	"license": "BSD",
+	"license": "BSD-2-Clause",
 	"authors": [
 		{
 			"name": "Tijs Verkoyen",
