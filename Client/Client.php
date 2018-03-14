@@ -42,7 +42,7 @@ class Client
     /**
      * @var bool
      */
-    protected $invoiceableByEmail, $invoiceableBySnailMail, $invoiceableByFactr;
+    protected $invoiceableByEmail, $invoiceableBySnailMail, $invoiceableByFactr, $disabled = false;
 
     /**
      * @param \SumoCoders\Factr\Client\Address $billingAddress
@@ -356,6 +356,16 @@ class Client
         $this->replacedById = $replacedById;
     }
 
+    public function isDisabled()
+    {
+        return $this->disabled;
+    }
+
+    public function setDisabled($disabled = true)
+    {
+        $this->disabled = $disabled;
+    }
+
     /**
      * Initialize the object with raw data
      *
@@ -392,6 +402,7 @@ class Client
         if(isset($data['payment_days'])) $item->setPaymentDays($data['payment_days']);
         if(isset($data['remarks'])) $item->setRemarks($data['remarks']);
         if(isset($data['replaced_by_id'])) $item->setReplacedById($data['replaced_by_id']);
+        if(isset($data['disabled_at']) && !empty($data['disabled_at'])) $item->setDisabled();
 
         return $item;
     }
