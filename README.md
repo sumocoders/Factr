@@ -4,7 +4,7 @@
 
 ## About
 
-PHP Factr is a (wrapper)class to communicate with [Factr](http://factr.be).
+PHP Factr is a (wrapper)class to communicate with [De Factuur](https://www.defactuur.be).
 
 ## License
 
@@ -12,4 +12,4 @@ PHP Factr is [BSD](http://classes.verkoyen.eu/overview/bsd) licensed.
 
 ## Documentation
 
-The class is well documented inline. If you use a decent IDE you'll see that each method is documented with PHPDoc.
+Each method in the class is well documented using PHPDoc.
