@@ -19,7 +19,7 @@ class Invoice
     /**
      * @var string
      */
-    protected $iid, $state, $description, $shownRemark;
+    protected $iid, $state, $paymentMethod, $description, $shownRemark;
 
     /**
      * @var \DateTime
@@ -289,6 +289,23 @@ class Invoice
     }
 
     /**
+     * @param string $paymentMethod Possible payment methods are:
+     *  not_paid, cheque, transfer, bankcontact, cash, direct_debit and paid
+     */
+    public function setPaymentMethod($paymentMethod)
+    {
+        $this->paymentMethod = $paymentMethod;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentMethod()
+    {
+        return $this->paymentMethod;
+    }
+
+    /**
      * @param float $total
      */
     private function setTotal($total)
@@ -391,6 +408,7 @@ class Invoice
         if(isset($data['client_id'])) $item->setClientId($data['client_id']);
         if(isset($data['iid'])) $item->setIid($data['iid']);
         if(isset($data['state'])) $item->setState($data['state']);
+        if(isset($data['payment_method'])) $item->setPaymentMethod($data['payment_method']);
         if(isset($data['generated'])) $item->setGenerated(new \DateTime('@' . strtotime($data['generated'])));
         if(isset($data['description'])) $item->setDescription($data['description']);
         if(isset($data['shown_remark'])) $item->setShownRemark($data['shown_remark']);
@@ -433,6 +451,7 @@ class Invoice
         $data = array();
         $data['client_id'] = $this->getClientId();
         $data['state'] = $this->getState();
+        $data['payment_method'] = $this->getPaymentMethod();
         $data['description'] = $this->getDescription();
         $data['shown_remark'] = $this->getShownRemark();
         $discount = $this->getDiscount();

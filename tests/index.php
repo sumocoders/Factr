@@ -55,6 +55,7 @@ $invoice->setClientId(3026);
 $invoice->setDescription('description');
 $invoice->setShownRemark('shown_remark');
 $invoice->setState('created');
+$invoice->setPaymentMethod('not_paid');
 
 try {
 //    $response = $factr->accountApiToken(USERNAME, PASSWORD);
