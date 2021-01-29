@@ -813,7 +813,7 @@ class Factr
     /**
      * @param int $id
      *
-     * @return Invoice|bool
+     * @return Product|bool
      */
     public function productsGet($id)
     {
