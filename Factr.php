@@ -623,7 +623,7 @@ class Factr
      * Get all of the available information for a single invoice. You 'll need the iid of the invoice.
      *
      * @param  string $iid The iid of the invoice.
-     * @return array
+     * @return Invoice
      */
     public function invoicesGetByIid($iid)
     {
