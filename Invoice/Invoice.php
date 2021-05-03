@@ -62,6 +62,11 @@ class Invoice
     protected $discountDescription;
 
     /**
+     * @var bool
+     */
+    protected $prepareForSending = false;
+
+    /**
      * @param \SumoCoders\Factr\Client\Client $client
      */
     public function setClient(Client $client)
@@ -394,6 +399,11 @@ class Invoice
         return $this;
     }
 
+    public function prepareForSending()
+    {
+        $this->prepareForSending = true;
+    }
+
     /**
      * Initialize the object with raw data
      *
@@ -482,6 +492,8 @@ class Invoice
             foreach ($this->getHistory() as $history) {
                 $data['history'][] = $history->toArray($forApi);
             }
+        } else {
+            $data['prepare_for_sending'] = $this->prepareForSending;
         }
 
         return $data;
