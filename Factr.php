@@ -716,6 +716,20 @@ class Factr
     }
 
     /**
+     * Marking invoice as sent by mail.
+     *
+     * @param  string $id
+     * @param  string $email
+     */
+    public function invoiceMarkAsSentByMail($id, $email)
+    {
+        $parameters = array();
+        $parameters['by'] = 'mail';
+        $parameters['to'] = $email;
+        $this->doCall('invoices/' . (string) $id . '/sent', $parameters, 'POST');
+    }
+
+    /**
      * Adding a payment to an invoice.
      *
      * @param  string  $id
