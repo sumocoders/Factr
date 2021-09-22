@@ -59,7 +59,7 @@ class Invoice
     /**
      * @var string
      */
-    protected $discountDescription;
+    protected $discountDescription, $vatException;
 
     /**
      * @var bool
@@ -405,6 +405,25 @@ class Invoice
     }
 
     /**
+     * @return string
+     */
+    public function getVatException()
+    {
+        return $this->vatException;
+    }
+
+    /**
+     * @param string $vatException
+     * @return $this
+     */
+    public function setVatException($vatException)
+    {
+        $this->vatException = $vatException;
+
+        return $this;
+    }
+
+    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -469,6 +488,12 @@ class Invoice
             $data['discount'] = $this->getDiscount();
             $data['percentage'] = $this->isDiscountAPercentage();
             $data['discount_description'] = $this->getDiscountDescription();
+        }
+        if ($this->getVatException()) {
+            $data['vat_exception'] = $this->getVatException();
+            if ($this->getVatException() === 'cash_discount') {
+                $data['vat_description'] = 'btw verlegd';
+            }
         }
 
         $data['items'] = array();
