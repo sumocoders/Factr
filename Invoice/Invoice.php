@@ -2,7 +2,6 @@
 namespace SumoCoders\Factr\Invoice;
 
 use SumoCoders\Factr\Client\Client;
-use SumoCoders\Factr\Factr;
 
 /**
  * Class Invoice
@@ -59,7 +58,7 @@ class Invoice
     /**
      * @var string
      */
-    protected $discountDescription, $vatException;
+    protected $discountDescription, $vatException, $vatDescription;
 
     /**
      * @var bool
@@ -424,6 +423,25 @@ class Invoice
     }
 
     /**
+     * @return string
+     */
+    public function getVatDescription()
+    {
+        return $this->vatDescription;
+    }
+
+    /**
+     * @param string $vatDescription
+     * @return $this
+     */
+    public function setVatDescription($vatDescription)
+    {
+        $this->vatDescription = $vatDescription;
+
+        return $this;
+    }
+
+    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -491,9 +509,9 @@ class Invoice
         }
         if ($this->getVatException()) {
             $data['vat_exception'] = $this->getVatException();
-            if ($this->getVatException() === 'cash_discount') {
-                $data['vat_description'] = 'btw verlegd';
-            }
+        }
+        if ($this->getVatDescription()) {
+            $data['vat_description'] = $this->getVatDescription();
         }
 
         $data['items'] = array();

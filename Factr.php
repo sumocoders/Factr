@@ -1,6 +1,7 @@
 <?php
 namespace SumoCoders\Factr;
 
+use InvalidArgumentException;
 use SumoCoders\Factr\Exception;
 use SumoCoders\Factr\Client\Client;
 use SumoCoders\Factr\Invoice\Invoice;
@@ -568,7 +569,7 @@ class Factr
                 $filters,
                 function($filter) use ($allowedFilters) {
                     if (!in_array($filter, $allowedFilters)) {
-                        throw new \InvalidArgumentException('Invalid filter');
+                        throw new InvalidArgumentException('Invalid filter');
                     }
                 }
             );
@@ -641,6 +642,11 @@ class Factr
      */
     public function invoicesCreate(Invoice $invoice)
     {
+        if (($invoice->getVatException() && !$invoice->getVatDescription())
+            || (!$invoice->getVatException() && $invoice->getVatDescription())) {
+            throw new InvalidArgumentException('Vat exception and vat description are required if one of them is filled');
+        }
+
         $parameters['invoice'] = $invoice->toArray(true);
         $rawData = $this->doCall('invoices.json', $parameters, 'POST');
 
