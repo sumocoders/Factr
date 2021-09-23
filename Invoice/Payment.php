@@ -2,6 +2,9 @@
 
 namespace SumoCoders\Factr\Invoice;
 
+use DateTime;
+use Exception;
+
 /**
  * Class Payment
  *
@@ -9,65 +12,38 @@ namespace SumoCoders\Factr\Invoice;
  */
 class Payment
 {
-    /**
-     * @var float
-     */
-    protected $amount;
+    protected float $amount;
 
-    /**
-     * @var \DateTime
-     */
-    protected $paidAt;
+    protected DateTime $paidAt;
 
-    /**
-     * @var string
-     */
-    protected $identifier;
+    protected string $identifier;
 
-    /**
-     * @param float $amount
-     */
-    public function setAmount($amount)
+    public function setAmount(float $amount): void
     {
         $this->amount = $amount;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $identifier
-     */
-    public function setIdentifier($identifier)
+    public function setIdentifier(string $identifier): void
     {
         $this->identifier = $identifier;
     }
 
-    /**
-     * @return string
-     */
-    public function getIdentifier()
+    public function getIdentifier(): string
     {
         return $this->identifier;
     }
 
-    /**
-     * @param \DateTime $paidAt
-     */
-    public function setPaidAt($paidAt)
+    public function setPaidAt(DateTime $paidAt): void
     {
         $this->paidAt = $paidAt;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getPaidAt()
+    public function getPaidAt(): DateTime
     {
         return $this->paidAt;
     }
@@ -75,15 +51,14 @@ class Payment
     /**
      * Initialize the object with raw data
      *
-     * @param $data
-     * @return Payment
+     * @throws Exception
      */
-    public static function initializeWithRawData($data)
+    public static function initializeWithRawData(array $data): Payment
     {
         $item = new Payment();
 
         if(isset($data['amount'])) $item->setAmount($data['amount']);
-        if(isset($data['paid_at'])) $item->setPaidAt(new \DateTime('@' . strtotime($data['paid_at'])));
+        if(isset($data['paid_at'])) $item->setPaidAt(new DateTime('@' . strtotime($data['paid_at'])));
         if(isset($data['identifier'])) $item->setIdentifier($data['identifier']);
 
         return $item;
@@ -91,11 +66,8 @@ class Payment
 
     /**
      * Converts the object into an array
-     *
-     * @param  bool[optional] $forApi Will the result be used in the API?
-     * @return array
      */
-    public function toArray($forApi = false)
+    public function toArray(bool $forApi = false): array
     {
         $data = array();
         $data['amount'] = $this->getAmount();
