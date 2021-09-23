@@ -1,4 +1,5 @@
 <?php
+
 namespace SumoCoders\Factr\Invoice;
 
 use SumoCoders\Factr\Client\Client;
