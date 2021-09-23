@@ -1,4 +1,5 @@
 <?php
+
 namespace SumoCoders\Factr\Invoice;
 
 /**
@@ -8,103 +9,70 @@ namespace SumoCoders\Factr\Invoice;
  */
 class Mail
 {
-    /**
-     * @var array
-     */
-    protected $to, $cc, $bcc;
+    protected array $to;
 
-    /**
-     * @var string
-     */
-    protected $subject, $text;
+    protected array $cc;
 
-    /**
-     * @param array $bcc
-     */
-    public function setBcc($bcc)
+    protected array $bcc;
+
+    protected string $subject;
+
+    protected string $text;
+
+    public function setBcc(array $bcc): void
     {
         $this->bcc = $bcc;
     }
 
-    /**
-     * @return array
-     */
-    public function getBcc()
+    public function getBcc(): array
     {
         return $this->bcc;
     }
 
-    /**
-     * @param array $cc
-     */
-    public function setCc($cc)
+    public function setCc(array $cc): void
     {
         $this->cc = $cc;
     }
 
-    /**
-     * @return array
-     */
-    public function getCc()
+    public function getCc(): array
     {
         return $this->cc;
     }
 
-    /**
-     * @param string $subject
-     */
-    public function setSubject($subject)
+    public function setSubject(string $subject): void
     {
         $this->subject = $subject;
     }
 
-    /**
-     * @return string
-     */
-    public function getSubject()
+    public function getSubject(): string
     {
         return $this->subject;
     }
 
-    /**
-     * @param string $text
-     */
-    public function setText($text)
+    public function setText(string $text): void
     {
         $this->text = $text;
     }
 
-    /**
-     * @return string
-     */
-    public function getText()
+    public function getText(): string
     {
         return $this->text;
     }
 
-    /**
-     * @param array $to
-     */
-    public function setTo($to)
+    public function setTo(array $to): void
     {
         $this->to = $to;
     }
 
-    /**
-     * @return array
-     */
-    public function getTo()
+    public function getTo(): array
     {
         return $this->to;
     }
 
     /**
      * Initialize the object with raw data
-     *
-     * @param $data
-     * @return Mail
      */
-    public static function initializeWithRawData($data)
+    public static function initializeWithRawData(array $data): Mail
     {
         $item = new Mail();
 
