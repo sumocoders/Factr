@@ -8,281 +8,184 @@ namespace SumoCoders\Factr\Invoice;
  */
 class Item
 {
-    /**
-     * @var string
-     */
-    protected $description, $externalProductId;
+    protected string $description;
 
-    /**
-     * @var float
-     */
-    protected $amount, $price, $totalWithoutVat, $totalVat, $totalWithVat, $totalVatOverrule;
+    protected string $externalProductId;
 
-    /**
-     * @var int
-     */
-    protected $vat, $referenceId;
+    protected float $amount;
 
-    /**
-     * @var float
-     */
-    protected $discount;
+    protected float $price;
 
-    /**
-     * @var bool
-     */
-    protected $discountIsPercentage = false;
+    protected float $totalWithoutVat;
 
-    /**
-     * @var string
-     */
-    protected $discountDescription;
+    protected float $totalVat;
 
-    /**
-     * @var int|null
-     */
-    protected $productId;
+    protected float $totalWithVat;
 
-    /**
-     * @param float $amount
-     */
-    public function setAmount($amount)
+    protected float $totalVatOverrule;
+
+    protected ?int $vat;
+
+    protected int $referenceId;
+
+    protected float $discount;
+
+    protected bool $discountIsPercentage = false;
+
+    protected string $discountDescription;
+
+    protected ?int $productId;
+
+    public function setAmount(float $amount): void
     {
         $this->amount = $amount;
     }
 
-    /**
-     * @return float
-     */
-    public function getAmount()
+    public function getAmount(): float
     {
         return $this->amount;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param float $price
-     */
-    public function setPrice($price)
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
 
-    /**
-     * @return float
-     */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    /**
-     * @param int $referenceId
-     */
-    private function setReferenceId($referenceId)
+    private function setReferenceId(int $referenceId): void
     {
         $this->referenceId = $referenceId;
     }
 
-    /**
-     * @return int
-     */
-    public function getReferenceId()
+    public function getReferenceId(): int
     {
         return $this->referenceId;
     }
 
-    /**
-     * @param float $totalVat
-     */
-    private function setTotalVat($totalVat)
+    private function setTotalVat(float $totalVat): void
     {
-        $this->totalVat = (float) $totalVat;
+        $this->totalVat = $totalVat;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotalVat()
+    public function getTotalVat(): float
     {
         return $this->totalVat;
     }
 
-    /**
-     * @param float $totalWithVat
-     */
-    private function setTotalWithVat($totalWithVat)
+    private function setTotalWithVat(float $totalWithVat): void
     {
-        $this->totalWithVat = (float) $totalWithVat;
+        $this->totalWithVat = $totalWithVat;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotalWithVat()
+    public function getTotalWithVat(): float
     {
         return $this->totalWithVat;
     }
 
-    /**
-     * @param float $totalWithoutVat
-     */
-    private function setTotalWithoutVat($totalWithoutVat)
+    private function setTotalWithoutVat(float $totalWithoutVat): void
     {
-        $this->totalWithoutVat = (float) $totalWithoutVat;
+        $this->totalWithoutVat = $totalWithoutVat;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotalWithoutVat()
+    public function getTotalWithoutVat(): float
     {
         return $this->totalWithoutVat;
     }
 
-    /**
-     * @param int|null $vat
-     */
-    public function setVat($vat = null)
+    public function setVat(?int $vat = null): void
     {
-        $this->vat = ($vat === null) ? null : (int) $vat;
+        $this->vat = $vat;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getVat()
+    public function getVat(): ?int
     {
         return $this->vat;
     }
 
-    /**
-     * @param float $vatAmount
-     */
-    public function setTotalVatOverrule($vatAmount)
+    public function setTotalVatOverrule(float $vatAmount): void
     {
-        $this->totalVatOverrule = (float) $vatAmount;
+        $this->totalVatOverrule = $vatAmount;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotalVatOverrule()
+    public function getTotalVatOverrule(): float
     {
         return $this->totalVatOverrule;
     }
 
-    /**
-     * @return float
-     */
-    public function getDiscount()
+    public function getDiscount(): float
     {
         return $this->discount;
     }
 
-    /**
-     * @param float $discount
-     * @return self
-     */
-    public function setDiscount($discount)
+    public function setDiscount(float $discount): Item
     {
         $this->discount = $discount;
 
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isDiscountAPercentage()
+    public function isDiscountAPercentage(): bool
     {
         return $this->discountIsPercentage;
     }
 
-    /**
-     * @param boolean $discountIsPercentage
-     * @return self
-     */
-    public function setDiscountIsPercentage($discountIsPercentage)
+    public function setDiscountIsPercentage(bool $discountIsPercentage): Item
     {
         $this->discountIsPercentage = $discountIsPercentage;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDiscountDescription()
+    public function getDiscountDescription(): string
     {
         return $this->discountDescription;
     }
 
-    /**
-     * @param string $discountDescription
-     * @return self
-     */
-    public function setDiscountDescription($discountDescription)
+    public function setDiscountDescription(string $discountDescription): Item
     {
         $this->discountDescription = $discountDescription;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getExternalProductId()
+    public function getExternalProductId(): string
     {
         return $this->externalProductId;
     }
 
-    /**
-     * @param string $externalProductId
-     */
-    public function setExternalProductId($externalProductId)
+    public function setExternalProductId(string $externalProductId): void
     {
         $this->externalProductId = $externalProductId;
     }
 
-    /**
-     * @param int|null $productId
-     */
-    public function setProductId($productId)
+    public function setProductId(?int $productId): void
     {
         $this->productId = $productId;
     }
 
-    /**
-     * @return int|null
-     */
-    public function getProductId()
+    public function getProductId(): ?int
     {
         return $this->productId;
     }
 
     /**
      * Initialize the object with raw data
-     *
-     * @param $data
-     * @return Item
      */
-    public static function initializeWithRawData($data)
+    public static function initializeWithRawData(array $data): Item
     {
         $item = new Item();
 
@@ -305,11 +208,8 @@ class Item
 
     /**
      * Converts the object into an array
-     *
-     * @param  bool[optional] $forApi Will the result be used in the API?
-     * @return array
      */
-    public function toArray($forApi = false)
+    public function toArray(bool $forApi = false): array
     {
         $data = array();
         $data['description'] = $this->getDescription();
