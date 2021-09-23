@@ -1,6 +1,9 @@
 <?php
 namespace SumoCoders\Factr\Invoice;
 
+use DateTime;
+use Exception;
+
 /**
  * Class History
  *
@@ -8,59 +11,39 @@ namespace SumoCoders\Factr\Invoice;
  */
 class History
 {
-    /**
-     * @var \DateTime
-     */
-    protected $createdAt;
+    protected DateTime $createdAt;
 
-    /**
-     * @var string
-     */
-    protected $message;
+    protected string $message;
 
-    /**
-     * @param \DateTime $createdAt
-     */
-    public function setCreatedAt($createdAt)
+    public function setCreatedAt(DateTime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
-    /**
-     * @param string $message
-     */
-    public function setMessage($message)
+    public function setMessage(string $message): void
     {
         $this->message = $message;
     }
 
-    /**
-     * @return string
-     */
-    public function getMessage()
+    public function getMessage(): string
     {
         return $this->message;
     }
 
     /**
      * Initialize the object with raw data
-     *
-     * @param $data
-     * @return History
+     * @throws Exception
      */
-    public static function initializeWithRawData($data)
+    public static function initializeWithRawData(array $data): History
     {
         $item = new History();
 
-        if(isset($data['created_at'])) $item->setCreatedAt(new \DateTime('@' . strtotime($data['created_at'])));
+        if(isset($data['created_at'])) $item->setCreatedAt(new DateTime('@' . strtotime($data['created_at'])));
         if(isset($data['message'])) $item->setMessage($data['message']);
 
         return $item;
@@ -68,11 +51,8 @@ class History
 
     /**
      * Converts the object into an array
-     *
-     * @param  bool[optional] $forApi Will the result be used in the API?
-     * @return array
      */
-    public function toArray($forApi = false)
+    public function toArray(bool $forApi = false): array
     {
         $data = array();
         $data['created_at'] = $this->getCreatedAt()->getTimestamp();
