@@ -2,7 +2,7 @@
 namespace SumoCoders\Factr;
 
 use InvalidArgumentException;
-use SumoCoders\Factr\Exception;
+use SumoCoders\Factr\Exception as FactrException;
 use SumoCoders\Factr\Client\Client;
 use SumoCoders\Factr\Invoice\Invoice;
 use SumoCoders\Factr\Invoice\Mail;
@@ -36,10 +36,8 @@ class Factr
 
     /**
      * The token to use
-     *
-     * @var string
      */
-    private $apiToken;
+    private string $apiToken;
 
     /**
      * cURL instance
@@ -50,17 +48,13 @@ class Factr
 
     /**
      * The timeout
-     *
-     * @var	int
      */
-    private $timeOut = 30;
+    private int $timeOut = 30;
 
     /**
      * The user agent
-     *
-     * @var	string
      */
-    private $userAgent;
+    private string $userAgent;
 
 // class methods
     /**
@@ -76,9 +70,8 @@ class Factr
      * Decode the response
      *
      * @param mixed  $value
-     * @param string $key
      */
-    private function decodeResponse(&$value, $key)
+    private function decodeResponse(&$value, string $key)
     {
         // convert to float
         if (in_array($key, array('amount', 'price', 'total_without_vat', 'total_with_vat', 'total_vat', 'total'), true)) {
@@ -89,12 +82,9 @@ class Factr
     /**
      * Encode data for usage in the API
      *
-     * @param  mixed            $data
-     * @param  array            $array
-     * @param  string[optional] $prefix
-     * @return array
+     * @param  mixed $data
      */
-    private function encodeData($data, $array = array(), $prefix = null)
+    private function encodeData($data, array $array = [], ?string $prefix = null): array
     {
         if (is_object($data)) {
             $data = get_object_vars($data);
@@ -117,17 +107,16 @@ class Factr
     /**
      * Make the call
      *
-     * @param  string           $url           The URL to call.
-     * @param  array[optional]  $parameters    The parameters that should be passed.
-     * @param  string[optional] $method        Which method should be used? Possible values are: GET, POST, DELETE, PUT.
-     * @param  bool[optional]   $returnHeaders Return the headers instead of the data?
-     * @return array
+     * @return array|bool|string
+     * @throws FactrException
      */
-    private function doCall($url, array $parameters = null, $method = 'GET', $returnHeaders = false)
-    {
+    private function doCall(
+        string $url,
+        ?array $parameters = null,
+        string $method = 'GET',
+        bool $returnHeaders = false
+    ) {
         // redefine
-        $url = (string) $url;
-        $method = (string) $method;
         $options = array();
 
         // add credentials
@@ -141,13 +130,13 @@ class Factr
             unset($options[CURLOPT_POSTFIELDS]);
 
             // build url
-            $url .= '?' . http_build_query($parameters, null, '&');
+            $url .= '?' . http_build_query($parameters, null);
             $url = $this->removeIndexFromArrayParameters($url);
         } elseif ($method == 'POST') {
             $data = $this->encodeData($parameters);
 
             if ($this->areWeSendingAFile($data) === false) {
-                $data = http_build_query($data, null, '&');
+                $data = http_build_query($data, null);
                 $data = $this->removeIndexFromArrayParameters($data);
             }
 
@@ -160,28 +149,21 @@ class Factr
             $options[CURLOPT_CUSTOMREQUEST] = 'DELETE';
 
             // build url
-            $url .= '?' . http_build_query($parameters, null, '&');
+            $url .= '?' . http_build_query($parameters, null);
         } elseif ($method == 'PUT') {
             $data = $this->encodeData($parameters);
-            $data = http_build_query($data, null, '&');
+            $data = http_build_query($data, null);
             $data = $this->removeIndexFromArrayParameters($data);
 
             $options[CURLOPT_POSTFIELDS] = $data;
             $options[CURLOPT_CUSTOMREQUEST] = 'PUT';
-        } else throw new Exception('Unsupported method (' . $method . ')');
+        } else throw new FactrException('Unsupported method (' . $method . ')');
 
         // prepend
         $url = self::API_URL . '/' . self::API_VERSION . '/' . $url;
 
         // set options
-        $options[CURLOPT_URL] = $url;
-        $options[CURLOPT_PORT] = self::API_PORT;
-        $options[CURLOPT_USERAGENT] = $this->getUserAgent();
-        $options[CURLOPT_FOLLOWLOCATION] = true;
-        $options[CURLOPT_SSL_VERIFYPEER] = false;
-        $options[CURLOPT_SSL_VERIFYHOST] = false;
-        $options[CURLOPT_RETURNTRANSFER] = true;
-        $options[CURLOPT_TIMEOUT] = (int) $this->getTimeOut();
+        $this->getCurlOptions($url);
 
         // init
         $this->curl = curl_init();
@@ -210,19 +192,19 @@ class Factr
                     $message = '';
                     foreach($json['errors'] as $key => $value) $message .= $key . ': ' . implode(', ', $value) . "\n";
 
-                    throw new Exception(trim($message));
+                    throw new FactrException(trim($message));
                 } else {
                     if(is_array($json) && array_key_exists('message', $json)) $response = $json['message'];
-                    throw new Exception($response, $headers['http_code']);
+                    throw new FactrException($response, $headers['http_code']);
                 }
             }
 
             // unknown error
-            throw new Exception('Invalid response (' . $headers['http_code'] . ')', $headers['http_code']);
+            throw new FactrException('Invalid response (' . $headers['http_code'] . ')', $headers['http_code']);
         }
 
         // error?
-        if($errorNumber != '') throw new Exception($errorMessage, $errorNumber);
+        if($errorNumber != '') throw new FactrException($errorMessage, $errorNumber);
 
         // return the headers if needed
         if($returnHeaders) return $headers;
@@ -236,7 +218,7 @@ class Factr
         $json = @json_decode($response, true);
 
         // validate json
-        if($json === false) throw new Exception('Invalid JSON-response');
+        if($json === false) throw new FactrException('Invalid JSON-response');
 
         // decode the response
         array_walk_recursive($json, array(__CLASS__, 'decodeResponse'));
@@ -247,14 +229,10 @@ class Factr
 
     /**
      * Detect from flattened parameter array if we're sending a file
-     *
-     * @param array $parameters The flattened parameter array
-     *
-     * @return bool
      */
-    private function areWeSendingAFile($parameters)
+    private function areWeSendingAFile(array $parameters): bool
     {
-        foreach ($parameters as $key => $value) {
+        foreach ($parameters as $value) {
             if (substr($value, 0, 1) === '@') {
                 return true;
             }
@@ -273,7 +251,7 @@ class Factr
      *
      * @param mixed $query The query string or flattened array
      *
-     * @return mixed the cleaned up query string or array
+     * @return array|null|string|string[] the cleaned up query string or array
      */
     private function removeIndexFromArrayParameters($query)
     {
@@ -282,41 +260,33 @@ class Factr
 
     /**
      * Get the API token
-     *
-     * @return string
      */
-    public function getApiToken()
+    public function getApiToken(): string
     {
         return $this->apiToken;
     }
 
     /**
      * Get the timeout that will be used
-     *
-     * @return int
      */
-    public function getTimeOut()
+    public function getTimeOut(): int
     {
-        return (int) $this->timeOut;
+        return $this->timeOut;
     }
 
     /**
      * Get the user agent that will be used. Our version will be prepended to yours.
      * It will look like: "PHP Factr/<version> <your-user-agent>"
-     *
-     * @return string
      */
-    public function getUserAgent()
+    public function getUserAgent(): string
     {
-        return (string) 'PHP Factr/' . self::VERSION . ' ' . $this->userAgent;
+        return 'PHP Factr/' . self::VERSION . ' ' . $this->userAgent;
     }
 
     /**
      * Set the API token
-     *
-     * @param string $apiToken
      */
-    public function setApiToken($apiToken)
+    public function setApiToken(string $apiToken): void
     {
         $this->apiToken = $apiToken;
     }
@@ -324,12 +294,10 @@ class Factr
     /**
      * Set the timeout
      * After this time the request will stop. You should handle any errors triggered by this.
-     *
-     * @param int $seconds The timeout in seconds.
      */
-    public function setTimeOut($seconds)
+    public function setTimeOut(int $seconds): void
     {
-        $this->timeOut = (int) $seconds;
+        $this->timeOut = $seconds;
     }
 
     /**
@@ -338,33 +306,23 @@ class Factr
      *
      * @param string $userAgent Your user-agent, it should look like <app-name>/<app-version>.
      */
-    public function setUserAgent($userAgent)
+    public function setUserAgent(string $userAgent): void
     {
-        $this->userAgent = (string) $userAgent;
+        $this->userAgent = $userAgent;
     }
 
 // account methods
     /**
      * Get an API token
      *
-     * @param  string    $username Your username
-     * @param  string    $password Tour password
-     * @return string
-     * @throws Exception
+     * @throws FactrException
      */
-    public function accountApiToken($username, $password)
+    public function accountApiToken(string $username, string $password): string
     {
         $url = self::API_URL . '/' . self::API_VERSION . '/account/api_token.json';
 
         // set options
-        $options[CURLOPT_URL] = $url;
-        $options[CURLOPT_PORT] = self::API_PORT;
-        $options[CURLOPT_USERAGENT] = $this->getUserAgent();
-        $options[CURLOPT_FOLLOWLOCATION] = true;
-        $options[CURLOPT_SSL_VERIFYPEER] = false;
-        $options[CURLOPT_SSL_VERIFYHOST] = false;
-        $options[CURLOPT_RETURNTRANSFER] = true;
-        $options[CURLOPT_TIMEOUT] = (int) $this->getTimeOut();
+        $options = $this->getCurlOptions($url);
         $options[CURLOPT_HTTPAUTH] = CURLAUTH_BASIC;
         $options[CURLOPT_USERPWD] = $username . ':' . $password;
 
@@ -380,14 +338,14 @@ class Factr
 
         // check status code
         if ($headers['http_code'] != 200) {
-            throw new Exception('Could\'t authenticate you');
+            throw new FactrException('Could\'t authenticate you');
         }
 
         // we expect JSON so decode it
         $json = @json_decode($response, true);
 
         // validate json
-        if($json === false || !isset($json['api_token'])) throw new Exception('Invalid JSON-response');
+        if($json === false || !isset($json['api_token'])) throw new FactrException('Invalid JSON-response');
 
         // set the token
         $this->setApiToken($json['api_token']);
@@ -396,13 +354,27 @@ class Factr
         return $json['api_token'];
     }
 
+    private function getCurlOptions(string $url): array
+    {
+        $options[CURLOPT_URL] = $url;
+        $options[CURLOPT_PORT] = self::API_PORT;
+        $options[CURLOPT_USERAGENT] = $this->getUserAgent();
+        $options[CURLOPT_FOLLOWLOCATION] = true;
+        $options[CURLOPT_SSL_VERIFYPEER] = false;
+        $options[CURLOPT_SSL_VERIFYHOST] = false;
+        $options[CURLOPT_RETURNTRANSFER] = true;
+        $options[CURLOPT_TIMEOUT] = $this->getTimeOut();
+
+        return $options;
+    }
+
 // client methods
     /**
      * Get a list of all the clients for the authenticating user.
      *
-     * @return array
+     * @throws FactrException
      */
-    public function clients()
+    public function clients(): array
     {
         $clients = array();
         $rawData = $this->doCall('clients.json');
@@ -418,12 +390,12 @@ class Factr
     /**
      * Get all of the available information for a single client. You 'll need the id of the client.
      *
-     * @param  string $id The id of the client.
-     * @return Client
+     * @return Client|bool
+     * @throws FactrException
      */
-    public function clientsGet($id)
+    public function clientsGet(string $id)
     {
-        $rawData = $this->doCall('clients/' . (string) $id . '.json');
+        $rawData = $this->doCall('clients/' . $id . '.json');
         if(empty($rawData)) return false;
 
         return Client::initializeWithRawData($rawData);
@@ -432,10 +404,10 @@ class Factr
     /**
      * Get all clients that are linked to an email address
      *
-     * @param  string $email The email of the client.
-     * @return Client[]
+     * @return Client[]|bool
+     * @throws FactrException
      */
-    public function clientsGetByEmail($email)
+    public function clientsGetByEmail(string $email)
     {
         $rawData = $this->doCall('clients.json', array('email' => $email));
         if (empty($rawData)) {
@@ -453,10 +425,9 @@ class Factr
     /**
      * Create a new client.
      *
-     * @param  Client      $client The information of the client.
-     * @return Client|bool
+     * @throws FactrException
      */
-    public function clientsCreate(Client $client)
+    public function clientsCreate(Client $client): Client
     {
         $parameters['client'] = $client->toArray(true);
         $rawData = $this->doCall('clients.json', $parameters, 'POST');
@@ -467,14 +438,12 @@ class Factr
     /**
      * Update an existing client
      *
-     * @param  string $id     The id of the client.
-     * @param  Client $client The information of the client.
-     * @return bool
+     * @throws FactrException
      */
-    public function clientsUpdate($id, Client $client)
+    public function clientsUpdate(string $id, Client $client): bool
     {
         $parameters['client'] = $client->toArray(true);
-        $rawData = $this->doCall('clients/' . (string) $id . '.json', $parameters, 'PUT', true);
+        $rawData = $this->doCall('clients/' . $id . '.json', $parameters, 'PUT', true);
 
         return ($rawData['http_code'] == 204);
     }
@@ -482,10 +451,9 @@ class Factr
     /**
      * Check if country is European
      *
-     * @param $countryCode
-     * @return bool
+     * @throws FactrException
      */
-    public function clientsIsEuropean($countryCode)
+    public function clientsIsEuropean(string $countryCode): bool
     {
         $parameters['country_code'] = $countryCode;
         $rawData = $this->doCall('clients/is_european.json', $parameters);
@@ -496,12 +464,11 @@ class Factr
     /**
      * Delete a client
      *
-     * @param  string $id The id of the client.
-     * @return bool
+     * @throws FactrException
      */
-    public function clientsDelete($id)
+    public function clientsDelete(string $id): bool
     {
-        $rawData = $this->doCall('clients/' . (string) $id . '.json', null, 'DELETE', true);
+        $rawData = $this->doCall('clients/' . $id . '.json', null, 'DELETE', true);
 
         return ($rawData['http_code'] == 204);
     }
@@ -509,15 +476,12 @@ class Factr
     /**
      * Disable client in favour of another client
      *
-     * @param $id
-     * @param $replacedById
-     *
-     * @return bool
+     * @throws FactrException
      */
-    public function clientsDisable($id, $replacedById)
+    public function clientsDisable(string $id, string $replacedById): bool
     {
         $parameters['replaced_by_id'] = $replacedById;
-        $rawData = $this->doCall('clients/' . (string) $id . '/disable.json', $parameters, 'POST', true);
+        $rawData = $this->doCall('clients/' . $id . '/disable.json', $parameters, 'POST', true);
 
         return ($rawData['http_code'] == 201);
     }
@@ -525,13 +489,12 @@ class Factr
     /**
      * Get the invoices for a client
      *
-     * @param  int   $id
-     * @return array
+     * @throws FactrException
      */
-    public function clientsInvoices($id)
+    public function clientsInvoices(int $id): array
     {
         $invoices = array();
-        $rawData = $this->doCall('clients/' . (string) $id . '/invoices.json');
+        $rawData = $this->doCall('clients/' . $id . '/invoices.json');
         if (!empty($rawData)) {
             foreach ($rawData as $data) {
                 $invoices[] = Invoice::initializeWithRawData($data);
@@ -545,11 +508,9 @@ class Factr
     /**
      * Get a list of all the invoices.
      *
-     * @param array $filters A list of filters
-     *
-     * @return array
+     * @throws FactrException
      */
-    public function invoices(array $filters = null)
+    public function invoices(?array $filters = null): array
     {
         $parameters = null;
 
@@ -591,12 +552,12 @@ class Factr
     /**
      * Get all of the available information for a single invoice. You 'll need the id of the invoice.
      *
-     * @param  string  $id The id of the invoice.
-     * @return Invoice
+     * @return Invoice|bool
+     * @throws FactrException
      */
-    public function invoicesGet($id)
+    public function invoicesGet(string $id)
     {
-        $rawData = $this->doCall('invoices/' . (string) $id . '.json');
+        $rawData = $this->doCall('invoices/' . $id . '.json');
         if(empty($rawData)) return false;
 
         return Invoice::initializeWithRawData($rawData);
@@ -605,13 +566,12 @@ class Factr
     /**
      * Get the pdf for an invoice
      *
-     * @param string $id The id of the invoice.
-     *
-     * @return string Raw PDF contents
+     * @return string|bool Raw PDF contents
+     * @throws FactrException
      */
-    public function invoicesGetAsPdf($id)
+    public function invoicesGetAsPdf(string $id)
     {
-        $rawData = $this->doCall('invoices/' . (string) $id . '.pdf');
+        $rawData = $this->doCall('invoices/' . $id . '.pdf');
 
         if (empty($rawData)) {
             return false;
@@ -623,12 +583,12 @@ class Factr
     /**
      * Get all of the available information for a single invoice. You 'll need the iid of the invoice.
      *
-     * @param  string $iid The iid of the invoice.
-     * @return Invoice
+     * @return Invoice|bool
+     * @throws FactrException
      */
-    public function invoicesGetByIid($iid)
+    public function invoicesGetByIid(string $iid)
     {
-        $rawData = $this->doCall('invoices/by_iid/' . (string) $iid . '.json');
+        $rawData = $this->doCall('invoices/by_iid/' . $iid . '.json');
         if(empty($rawData)) return false;
 
         return Invoice::initializeWithRawData($rawData);
@@ -637,10 +597,9 @@ class Factr
     /**
      * Create a new invoice.
      *
-     * @param  Invoice $invoice The invoice information.
-     * @return Invoice
+     * @throws FactrException
      */
-    public function invoicesCreate(Invoice $invoice)
+    public function invoicesCreate(Invoice $invoice): Invoice
     {
         if (($invoice->getVatException() && !$invoice->getVatDescription())
             || (!$invoice->getVatException() && $invoice->getVatDescription())) {
@@ -656,14 +615,12 @@ class Factr
     /**
      * Create a new credit note on invoice.
      *
-     * @param  string  $id
-     * @param  Invoice $creditNote The credit note information.
-     * @return Invoice
+     * @throws FactrException
      */
-    public function invoicesCreateCreditNote($id, Invoice $creditNote)
+    public function invoicesCreateCreditNote(string $id, Invoice $creditNote): Invoice
     {
         $parameters['credit_note'] = $creditNote->toArray(true);
-        $rawData = $this->doCall('invoices/' . (string) $id . '/credit_notes.json', $parameters, 'POST');
+        $rawData = $this->doCall('invoices/' . $id . '/credit_notes.json', $parameters, 'POST');
 
         return Invoice::initializeWithRawData($rawData);
     }
@@ -671,14 +628,12 @@ class Factr
     /**
      * Update an existing invoice
      *
-     * @param  string  $id
-     * @param  Invoice $invoice
-     * @return bool
+     * @throws FactrException
      */
-    public function invoicesUpdate($id, Invoice $invoice)
+    public function invoicesUpdate(string $id, Invoice $invoice): bool
     {
         $parameters['invoice'] = $invoice->toArray(true);
-        $rawData = $this->doCall('invoices/' . (string) $id . '.json', $parameters, 'PUT', true);
+        $rawData = $this->doCall('invoices/' . $id . '.json', $parameters, 'PUT', true);
 
         return ($rawData['http_code'] == 204);
     }
@@ -686,12 +641,11 @@ class Factr
     /**
      * Delete an invoice
      *
-     * @param  int  $id
-     * @return bool
+     * @throws FactrException
      */
-    public function invoicesDelete($id)
+    public function invoicesDelete(int $id): bool
     {
-        $rawData = $this->doCall('invoices/' . (string) $id . '.json', null, 'DELETE', true);
+        $rawData = $this->doCall('invoices/' . $id . '.json', null, 'DELETE', true);
 
         return ($rawData['http_code'] == 204);
     }
@@ -699,23 +653,24 @@ class Factr
     /**
      * Sending an invoice by mail.
      *
-     * @param  string           $id
-     * @param  string[optional] $to
-     * @param  string[optional] $cc
-     * @param  string[optional] $bcc
-     * @param  string[optional] $subject
-     * @param  string[optional] $text
-     * @return Mail
+     * @return Mail|bool
+     * @throws FactrException
      */
-    public function invoiceSendByMail($id, $to = null, $cc = null, $bcc = null, $subject = null, $text = null)
-    {
+    public function invoiceSendByMail(
+        string $id,
+        ?string $to = null,
+        ?string $cc = null,
+        ?string $bcc = null,
+        ?string $subject = null,
+        ?string $text = null
+    ) {
         $parameters = array();
-        if($to !== null) $parameters['mail']['to'] = (string) $to;
-        if($cc !== null) $parameters['mail']['cc'] = (string) $cc;
-        if($bcc !== null) $parameters['mail']['bcc'] = (string) $bcc;
-        if($subject !== null) $parameters['mail']['subject'] = (string) $subject;
-        if($text !== null) $parameters['mail']['text'] = (string) $text;
-        $rawData = $this->doCall('invoices/' . (string) $id . '/mails.json', $parameters, 'POST');
+        if($to !== null) $parameters['mail']['to'] = $to;
+        if($cc !== null) $parameters['mail']['cc'] = $cc;
+        if($bcc !== null) $parameters['mail']['bcc'] = $bcc;
+        if($subject !== null) $parameters['mail']['subject'] = $subject;
+        if($text !== null) $parameters['mail']['text'] = $text;
+        $rawData = $this->doCall('invoices/' . $id . '/mails.json', $parameters, 'POST');
         if(empty($rawData)) return false;
 
         return Mail::initializeWithRawData($rawData);
@@ -724,28 +679,25 @@ class Factr
     /**
      * Marking invoice as sent by mail.
      *
-     * @param  string $id
-     * @param  string $email
+     * @throws FactrException
      */
-    public function invoiceMarkAsSentByMail($id, $email)
+    public function invoiceMarkAsSentByMail(string $id, string $email): void
     {
         $parameters = array();
         $parameters['by'] = 'mail';
         $parameters['to'] = $email;
-        $this->doCall('invoices/' . (string) $id . '/sent', $parameters, 'POST');
+        $this->doCall('invoices/' . $id . '/sent', $parameters, 'POST');
     }
 
     /**
      * Adding a payment to an invoice.
      *
-     * @param  string  $id
-     * @param  Payment $payment
-     * @return Payment
+     * @throws FactrException
      */
-    public function invoicesAddPayment($id, Payment $payment)
+    public function invoicesAddPayment(string $id, Payment $payment): Payment
     {
         $parameters['payment'] = $payment->toArray(true);
-        $rawData = $this->doCall('invoices/' . (string) $id . '/payments.json', $parameters, 'POST');
+        $rawData = $this->doCall('invoices/' . $id . '/payments.json', $parameters, 'POST');
 
         return Payment::initializeWithRawData($rawData);
     }
@@ -755,26 +707,22 @@ class Factr
      *
      * @param string $id The invoice id
      *
-     * @return array
+     * @throws FactrException
      */
-    public function invoiceSendReminder($id)
+    public function invoiceSendReminder(string $id): array
     {
-        $rawData = $this->doCall('invoices/' . (string) $id . '/reminders', array(), 'POST');
-
-        return $rawData;
+        return $this->doCall('invoices/' . $id . '/reminders', array(), 'POST');
     }
 
     /**
      * Check if vat is required
      *
-     * @param string $countryCode
-     * @param boolean $isCompany
-     * @return boolean
+     * @throws FactrException
      */
-    public function invoicesVatRequired($countryCode, $isCompany)
+    public function invoicesVatRequired(string $countryCode, bool $isCompany): bool
     {
         $parameters['country_code'] = $countryCode;
-        $parameters['company'] = (bool) $isCompany;
+        $parameters['company'] = $isCompany;
         $rawData = $this->doCall('invoices/vat_required.json', $parameters);
 
         return $rawData['vat_required'];
@@ -783,10 +731,9 @@ class Factr
     /**
      * Check if valid vat number
      *
-     * @param string $vatNumber
-     * @return boolean
+     * @throws FactrException
      */
-    public function isValidVat($vatNumber)
+    public function isValidVat(string $vatNumber): bool
     {
         $parameters['vat'] = $vatNumber;
         $rawData = $this->doCall('vat/verify.json', $parameters);
@@ -797,26 +744,22 @@ class Factr
     /**
      * Upload a CODA file and let Factr interpret it
      *
-     * @param string $filePath The file path
-     *
-     * @return array
+     * @throws FactrException
      */
-    public function uploadCodaFile($filePath)
+    public function uploadCodaFile(string $filePath): array
     {
         $parameters = array(
             'file' => '@' . $filePath,
             'file_type' => 'coda',
         );
 
-        $rawData = $this->doCall('payments/process_file.json', $parameters, 'POST');
-
-        return $rawData;
+        return $this->doCall('payments/process_file.json', $parameters, 'POST');
     }
 
     /**
-     * @return array
+     * @throws FactrException
      */
-    public function products()
+    public function products(): array
     {
         $products = array();
         $rawData = $this->doCall('products.json');
@@ -831,13 +774,12 @@ class Factr
     }
 
     /**
-     * @param int $id
-     *
      * @return Product|bool
+     * @throws FactrException
      */
-    public function productsGet($id)
+    public function productsGet(int $id)
     {
-        $rawData = $this->doCall('products/' . (string) $id . '.json');
+        $rawData = $this->doCall('products/' . $id . '.json');
 
         if (empty($rawData)) {
             return false;
@@ -847,11 +789,9 @@ class Factr
     }
 
     /**
-     * @param Product $product
-     *
-     * @return Product
+     * @throws FactrException
      */
-    public function productsCreate(Product $product)
+    public function productsCreate(Product $product): Product
     {
         $parameters['product'] = $product->toArray();
 
