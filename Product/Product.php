@@ -4,40 +4,23 @@ namespace SumoCoders\Factr\Product;
 
 final class Product
 {
-    /**
-     * @var int
-     */
-    private $id;
+    private ?int $id;
 
-    /**
-     * @var string
-     */
-    private $name;
+    private string $name;
 
-    /**
-     * @var string
-     */
-    private $description;
+    private string $description;
 
-    /**
-     * @var float
-     */
-    private $price;
+    private float $price;
 
-    /**
-     * @var int
-     */
-    private $vat;
+    private int $vat;
 
-    /**
-     * @var string $name
-     * @var string $decription
-     * @var float $price
-     * @var int $vat
-     * @var int|null $id
-     */
-    public function __construct($name, $description, $price, $vat, $id = null)
-    {
+    public function __construct(
+        string $name,
+        string $description,
+        float $price,
+        int $vat,
+        ?int $id = null
+    ) {
         $this->name = $name;
         $this->description = $description;
         $this->price = $price;
@@ -45,84 +28,52 @@ final class Product
         $this->id = $id;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $name
-     */
-    public function setName($name)
+    public function setName(string $name): void
     {
         $this->name = $name;
     }
 
-    /**
-     * @return string
-     */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param float $price
-     */
-    public function setPrice($price)
+    public function setPrice(float $price): void
     {
         $this->price = $price;
     }
 
-    /**
-     * @return float
-     */
-    public function getPrice()
+    public function getPrice(): float
     {
         return $this->price;
     }
 
-    /**
-     * @param int $vat
-     */
-    public function setVat($vat)
+    public function setVat(int $vat): void
     {
         $this->vat = $vat;
     }
 
-    /**
-     * @return int
-     */
-    public function getVat()
+    public function getVat(): int
     {
         return $this->vat;
     }
 
-    /**
-     * @param array $data
-     *
-     * @return self
-     */
-    public static function initializeWithRawData($data)
+    public static function initializeWithRawData(array $data): Product
     {
         return new self(
             $data['name'],
@@ -133,10 +84,7 @@ final class Product
         );
     }
 
-    /**
-     * @return array
-     */
-    public function toArray()
+    public function toArray(): array
     {
         $data = array();
 
