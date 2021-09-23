@@ -12,66 +12,46 @@ namespace SumoCoders\Factr\Client;
  */
 class Address
 {
-    /**
-     * @var string
-     */
-    protected $country, $countryName, $fullAddress;
+    protected string $country;
 
-    /**
-     * @param string $country
-     */
-    public function setCountry($country)
+    protected string $countryName;
+
+    protected string $fullAddress;
+
+    public function setCountry(string $country)
     {
         $this->country = $country;
     }
 
-    /**
-     * @return string
-     */
-    public function getCountry()
+    public function getCountry(): string
     {
         return $this->country;
     }
 
-    /**
-     * @param string $countryName
-     */
-    private function setCountryName($countryName)
+    private function setCountryName(string $countryName)
     {
         $this->countryName = $countryName;
     }
 
-    /**
-     * @return string
-     */
-    public function getCountryName()
+    public function getCountryName(): string
     {
         return $this->countryName;
     }
 
-    /**
-     * @param string $fullAddress
-     */
-    public function setFullAddress($fullAddress)
+    public function setFullAddress(string $fullAddress)
     {
         $this->fullAddress = $fullAddress;
     }
 
-    /**
-     * @return string
-     */
-    public function getFullAddress()
+    public function getFullAddress(): string
     {
         return $this->fullAddress;
     }
 
     /**
      * Initialize the object with raw data
-     *
-     * @param $data
-     * @return Address
      */
-    public static function initializeWithRawData($data)
+    public static function initializeWithRawData(array $data): Address
     {
         $item = new Address();
 
@@ -84,11 +64,8 @@ class Address
 
     /**
      * Converts the object into an array
-     *
-     * @param  bool[optional] $forApi Will the result be used in the API?
-     * @return array
      */
-    public function toArray($forApi = false)
+    public function toArray(bool $forApi = false): array
     {
         $data = array();
 

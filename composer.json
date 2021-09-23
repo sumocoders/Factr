@@ -17,6 +17,6 @@
 	},
 	"target-dir": "SumoCoders/Factr",
 	"autoload": {
-		"psr-0": {"SumoCoders\\Factr": ""}
+		"psr-4": {"SumoCoders\\Factr": ""}
 	}
 }
