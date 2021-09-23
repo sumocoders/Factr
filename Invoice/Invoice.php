@@ -2,6 +2,8 @@
 namespace SumoCoders\Factr\Invoice;
 
 use SumoCoders\Factr\Client\Client;
+use DateTime;
+use Exception;
 
 /**
  * Class Invoice
@@ -10,284 +12,212 @@ use SumoCoders\Factr\Client\Client;
  */
 class Invoice
 {
-    /**
-     * @var int
-     */
-    protected $id, $clientId;
+    protected int $id;
 
-    /**
-     * @var string
-     */
-    protected $iid, $state, $paymentMethod, $description, $shownRemark;
+    protected int $clientId;
 
-    /**
-     * @var \DateTime
-     */
-    protected $generated, $dueDate, $fullyPaidAt;
+    protected string $iid;
 
-    /**
-     * @var array
-     */
-    protected $items, $payments, $history;
+    protected string $state;
 
-    /**
-     * @var float
-     */
-    protected $total;
+    protected string $paymentMethod;
 
-    /**
-     * @var \SumoCoders\Factr\Client\Client
-     */
-    protected $client;
+    protected string $description;
 
-    /**
-     * @var string
-     */
-    protected $language;
+    protected string $shownRemark;
 
-    /**
-     * @var float
-     */
-    protected $discount;
+    protected DateTime $generated;
 
-    /**
-     * @var bool
-     */
-    protected $discountIsPercentage = false;
+    protected DateTime $dueDate;
 
-    /**
-     * @var string
-     */
-    protected $discountDescription, $vatException, $vatDescription;
+    protected DateTime $fullyPaidAt;
 
-    /**
-     * @var bool
-     */
-    protected $prepareForSending = false;
+    /** @var Item[] */
+    protected array $items;
 
-    /**
-     * @param \SumoCoders\Factr\Client\Client $client
-     */
-    public function setClient(Client $client)
+    /** @var Payment[] */
+    protected array $payments;
+
+    /** @var History[] */
+    protected array $history;
+
+    protected float $total;
+
+    protected Client $client;
+
+    protected string $language;
+
+    protected float $discount;
+
+    protected bool $discountIsPercentage = false;
+
+    protected string $discountDescription;
+
+    protected string $vatException;
+
+    protected string $vatDescription;
+
+    protected bool $prepareForSending = false;
+
+    public function setClient(Client $client): void
     {
         $this->client = $client;
         $this->setClientId($client->getId());
     }
 
-    /**
-     * @return \SumoCoders\Factr\Client\Client
-     */
-    public function getClient()
+    public function getClient(): Client
     {
         return $this->client;
     }
 
-    /**
-     * @param int $clientId
-     */
-    public function setClientId($clientId)
+    public function setClientId(int $clientId): void
     {
         $this->clientId = $clientId;
     }
 
-    /**
-     * @return int
-     */
-    public function getClientId()
+    public function getClientId(): int
     {
         return $this->clientId;
     }
 
-    /**
-     * @param string $description
-     */
-    public function setDescription($description)
+    public function setDescription(string $description): void
     {
         $this->description = $description;
     }
 
-    /**
-     * @return string
-     */
-    public function getDescription()
+    public function getDescription(): string
     {
         return $this->description;
     }
 
-    /**
-     * @param \DateTime $dueDate
-     */
-    private function setDueDate($dueDate)
+    private function setDueDate(DateTime $dueDate): void
     {
         $this->dueDate = $dueDate;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getDueDate()
+    public function getDueDate(): DateTime
     {
         return $this->dueDate;
     }
 
-    /**
-     * @param \DateTime $fullyPaidAt
-     */
-    private function setFullyPaidAt(\DateTime $fullyPaidAt)
+    private function setFullyPaidAt(DateTime $fullyPaidAt): void
     {
         $this->fullyPaidAt = $fullyPaidAt;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getFullyPaidAt()
+    public function getFullyPaidAt(): DateTime
     {
         return $this->fullyPaidAt;
     }
 
-    /**
-     * @param \DateTime $generated
-     */
-    private function setGenerated($generated)
+    private function setGenerated(DateTime $generated): void
     {
         $this->generated = $generated;
     }
 
-    /**
-     * @return \DateTime
-     */
-    public function getGenerated()
+    public function getGenerated(): DateTime
     {
         return $this->generated;
     }
 
-    /**
-     * @param History $history
-     */
-    private function addHistory(History $history)
+    private function addHistory(History $history): void
     {
         $this->history[] = $history;
     }
 
     /**
-     * @param array $history
+     * @param History[] $history
      */
-    public function setHistory($history)
+    public function setHistory(array $history): void
     {
         $this->history = $history;
     }
 
     /**
-     * @return array
+     * @return History[]
      */
-    public function getHistory()
+    public function getHistory(): array
     {
         return $this->history;
     }
 
-    /**
-     * @param int $id
-     */
-    private function setId($id)
+    private function setId(int $id): void
     {
         $this->id = $id;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param string $iid
-     */
-    private function setIid($iid)
+    private function setIid(string $iid): void
     {
         $this->iid = $iid;
     }
 
-    /**
-     * @return string
-     */
-    public function getIid()
+    public function getIid(): string
     {
         return $this->iid;
     }
 
-    /**
-     * @param Item $item
-     */
-    public function addItem(Item $item)
+    public function addItem(Item $item): void
     {
         $this->items[] = $item;
     }
 
     /**
-     * @param array $items
+     * @param Item[] $items
      */
-    public function setItems($items)
+    public function setItems(array $items): void
     {
         $this->items = $items;
     }
 
     /**
-     * @return array
+     * @return Item[]
      */
-    public function getItems()
+    public function getItems(): array
     {
         return $this->items;
     }
 
     /**
      * Add a payment
-     *
-     * @param Payment $payment
      */
-    private function addPayment(Payment $payment)
+    private function addPayment(Payment $payment): void
     {
         $this->payments[] = $payment;
     }
 
     /**
-     * @return array
+     * @return Payment[]
      */
-    public function getPayments()
+    public function getPayments(): array
     {
         return $this->payments;
     }
 
-    /**
-     * @param string $shownRemark
-     */
-    public function setShownRemark($shownRemark)
+    public function setShownRemark(string $shownRemark): void
     {
         $this->shownRemark = $shownRemark;
     }
 
-    /**
-     * @return string
-     */
-    public function getShownRemark()
+    public function getShownRemark(): string
     {
         return $this->shownRemark;
     }
 
     /**
      * @param string $state Possible states are: paid, sent, created
+     * @todo: valueObject?
      */
-    public function setState($state)
+    public function setState(string $state): void
     {
         $this->state = $state;
     }
 
-    /**
-     * @return string
-     */
-    public function getState()
+    public function getState(): string
     {
         return $this->state;
     }
@@ -295,146 +225,97 @@ class Invoice
     /**
      * @param string $paymentMethod Possible payment methods are:
      *  not_paid, cheque, transfer, bankcontact, cash, direct_debit and paid
+     * @todo: valueObject
      */
-    public function setPaymentMethod($paymentMethod)
+    public function setPaymentMethod(string $paymentMethod): void
     {
         $this->paymentMethod = $paymentMethod;
     }
 
-    /**
-     * @return string
-     */
-    public function getPaymentMethod()
+    public function getPaymentMethod(): string
     {
         return $this->paymentMethod;
     }
 
-    /**
-     * @param float $total
-     */
-    private function setTotal($total)
+    private function setTotal(float $total): void
     {
         $this->total = $total;
     }
 
-    /**
-     * @return float
-     */
-    public function getTotal()
+    public function getTotal(): float
     {
         return $this->total;
     }
 
-    /**
-     * @param string $language
-     */
-    public function setLanguage($language)
+    public function setLanguage(string $language): void
     {
         $this->language = $language;
     }
 
-    /**
-     * @return string
-     */
-    public function getLanguage()
+    public function getLanguage(): string
     {
         return $this->language;
     }
 
-    /**
-     * @return float
-     */
-    public function getDiscount()
+    public function getDiscount(): float
     {
         return $this->discount;
     }
 
-    /**
-     * @param float $discount
-     * @return self
-     */
-    public function setDiscount($discount)
+    public function setDiscount(float $discount): Invoice
     {
         $this->discount = $discount;
 
         return $this;
     }
 
-    /**
-     * @return boolean
-     */
-    public function isDiscountAPercentage()
+    public function isDiscountAPercentage(): bool
     {
         return $this->discountIsPercentage;
     }
 
-    /**
-     * @param boolean $discountIsPercentage
-     * @return self
-     */
-    public function setDiscountIsPercentage($discountIsPercentage)
+    public function setDiscountIsPercentage(bool $discountIsPercentage): Invoice
     {
         $this->discountIsPercentage = $discountIsPercentage;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDiscountDescription()
+    public function getDiscountDescription(): string
     {
         return $this->discountDescription;
     }
 
-    /**
-     * @param string $discountDescription
-     * @return self
-     */
-    public function setDiscountDescription($discountDescription)
+    public function setDiscountDescription(string $discountDescription): Invoice
     {
         $this->discountDescription = $discountDescription;
 
         return $this;
     }
 
-    public function prepareForSending()
+    public function prepareForSending(): void
     {
         $this->prepareForSending = true;
     }
 
-    /**
-     * @return string
-     */
-    public function getVatException()
+    public function getVatException(): string
     {
         return $this->vatException;
     }
 
-    /**
-     * @param string $vatException
-     * @return $this
-     */
-    public function setVatException($vatException)
+    public function setVatException(string $vatException): Invoice
     {
         $this->vatException = $vatException;
 
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getVatDescription()
+    public function getVatDescription(): string
     {
         return $this->vatDescription;
     }
 
-    /**
-     * @param string $vatDescription
-     * @return $this
-     */
-    public function setVatDescription($vatDescription)
+    public function setVatDescription(string $vatDescription): Invoice
     {
         $this->vatDescription = $vatDescription;
 
@@ -444,10 +325,9 @@ class Invoice
     /**
      * Initialize the object with raw data
      *
-     * @param $data
-     * @return Invoice
+     * @throws Exception
      */
-    public static function initializeWithRawData($data)
+    public static function initializeWithRawData(array $data): Invoice
     {
         $item = new Invoice();
 
@@ -456,7 +336,7 @@ class Invoice
         if(isset($data['iid'])) $item->setIid($data['iid']);
         if(isset($data['state'])) $item->setState($data['state']);
         if(isset($data['payment_method'])) $item->setPaymentMethod($data['payment_method']);
-        if(isset($data['generated'])) $item->setGenerated(new \DateTime('@' . strtotime($data['generated'])));
+        if(isset($data['generated'])) $item->setGenerated(new DateTime('@' . strtotime($data['generated'])));
         if(isset($data['description'])) $item->setDescription($data['description']);
         if(isset($data['shown_remark'])) $item->setShownRemark($data['shown_remark']);
         if (isset($data['items'])) {
@@ -473,8 +353,8 @@ class Invoice
         if(isset($data['discount'])) $item->setDiscount($data['discount']);
         if(isset($data['percentage'])) $item->setDiscountIsPercentage($data['percentage']);
         if(isset($data['discount_description'])) $item->setDiscountDescription($data['discount_description']);
-        if(isset($data['due_date'])) $item->setDueDate(new \DateTime('@' . strtotime($data['due_date'])));
-        if(isset($data['fully_paid_at'])) $item->setFullyPaidAt(new \DateTime('@' . strtotime($data['fully_paid_at'])));
+        if(isset($data['due_date'])) $item->setDueDate(new DateTime('@' . strtotime($data['due_date'])));
+        if(isset($data['fully_paid_at'])) $item->setFullyPaidAt(new DateTime('@' . strtotime($data['fully_paid_at'])));
         if (isset($data['history'])) {
             foreach ($data['history'] as $row) {
                 $item->addHistory(History::initializeWithRawData($row));
@@ -489,11 +369,8 @@ class Invoice
 
     /**
      * Converts the object into an array
-     *
-     * @param  bool[optional] $forApi Will the result be used in the API?
-     * @return array
      */
-    public function toArray($forApi = false)
+    public function toArray(bool $forApi = false): array
     {
         $data = array();
         $data['client_id'] = $this->getClientId();
