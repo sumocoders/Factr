@@ -2,8 +2,6 @@
 
 namespace SumoCoders\Factr\Client;
 
-use SumoCoders\Factr\Client\Address;
-
 /**
  * Client class
  *
@@ -14,365 +12,255 @@ use SumoCoders\Factr\Client\Address;
  */
 class Client
 {
-    /**
-     * @var int
-     */
-    protected $id, $paymentDays, $replacedById;
+    protected int $id;
 
-    /**
-     * @var string
-     */
-    protected $cid,
-                $company, $vat,
-                $firstName, $lastName,
-                $phone, $fax, $cell,
-                $website,
-                $remarks;
+    protected int $paymentDays;
 
-    /**
-     * @var Address
-     */
-    protected $billingAddress, $companyAddress;
+    protected int $replacedById;
 
-    /**
-     * @var array
-     */
-    protected $email;
+    protected string $cid;
 
-    /**
-     * @var bool
-     */
-    protected $invoiceableByEmail, $invoiceableBySnailMail, $invoiceableByFactr, $disabled = false;
+    protected string $company;
 
-    /**
-     * @param \SumoCoders\Factr\Client\Address $billingAddress
-     */
-    public function setBillingAddress($billingAddress)
+    protected string $vat;
+
+    protected string $firstName;
+
+    protected string $lastName;
+
+    protected string $phone;
+
+    protected string $fax;
+
+    protected string $cell;
+
+    protected string $website;
+
+    protected string $remarks;
+
+    protected Address $billingAddress;
+
+    protected Address $companyAddress;
+
+    protected array $email;
+
+    protected bool $invoiceableByEmail;
+
+    protected bool $invoiceableBySnailMail;
+
+    protected bool $invoiceableByFactr;
+
+    protected bool $disabled = false;
+
+    public function setBillingAddress(Address $billingAddress): void
     {
         $this->billingAddress = $billingAddress;
     }
 
-    /**
-     * @return \SumoCoders\Factr\Client\Address
-     */
-    public function getBillingAddress()
+    public function getBillingAddress(): Address
     {
         return $this->billingAddress;
     }
 
-    /**
-     * @param string $cell
-     */
-    public function setCell($cell)
+    public function setCell(string $cell): void
     {
-        $this->cell = (string) $cell;
+        $this->cell = $cell;
     }
 
-    /**
-     * @return string
-     */
-    public function getCell()
+    public function getCell(): string
     {
         return $this->cell;
     }
 
-    /**
-     * @param string $cid
-     */
-    public function setCid($cid)
+    public function setCid(string $cid): void
     {
-        $this->cid = (string) $cid;
+        $this->cid = $cid;
     }
 
-    /**
-     * @return string
-     */
-    public function getCid()
+    public function getCid(): string
     {
         return $this->cid;
     }
 
-    /**
-     * @param string $company
-     */
-    public function setCompany($company)
+    public function setCompany(string $company): void
     {
-        $this->company = (string) $company;
+        $this->company = $company;
     }
 
-    /**
-     * @return string
-     */
-    public function getCompany()
+    public function getCompany(): string
     {
         return $this->company;
     }
 
-    /**
-     * @param \SumoCoders\Factr\Client\Address $companyAddress
-     */
-    public function setCompanyAddress($companyAddress)
+    public function setCompanyAddress(Address $companyAddress): void
     {
         $this->companyAddress = $companyAddress;
     }
 
-    /**
-     * @return \SumoCoders\Factr\Client\Address
-     */
-    public function getCompanyAddress()
+    public function getCompanyAddress(): Address
     {
         return $this->companyAddress;
     }
 
-    /**
-     * @param $email
-     */
-    public function addEmail($email)
+    public function addEmail(string $email): void
     {
-        $this->email[] = (string) $email;
+        $this->email[] = $email;
     }
 
-    /**
-     * @param array $email
-     */
-    public function setEmail(array $email)
+    public function setEmail(array $email): void
     {
         $this->email = $email;
     }
 
-    /**
-     * @return array
-     */
-    public function getEmail()
+    public function getEmail(): array
     {
         return $this->email;
     }
 
-    /**
-     * @param string $fax
-     */
-    public function setFax($fax)
+    public function setFax(string $fax): void
     {
-        $this->fax = (string) $fax;
+        $this->fax = $fax;
     }
 
-    /**
-     * @return string
-     */
-    public function getFax()
+    public function getFax(): string
     {
         return $this->fax;
     }
 
-    /**
-     * @param string $firstName
-     */
-    public function setFirstName($firstName)
+    public function setFirstName(string $firstName): void
     {
-        $this->firstName = (string) $firstName;
+        $this->firstName = $firstName;
     }
 
-    /**
-     * @return string
-     */
-    public function getFirstName()
+    public function getFirstName(): string
     {
         return $this->firstName;
     }
 
-    /**
-     * @param int $id
-     */
-    private function setId($id)
+    private function setId(int $id): void
     {
-        $this->id = (int) $id;
+        $this->id = $id;
     }
 
-    /**
-     * @return int
-     */
-    public function getId()
+    public function getId(): int
     {
         return $this->id;
     }
 
-    /**
-     * @param boolean $invoiceableByEmail
-     */
-    public function setInvoiceableByEmail($invoiceableByEmail)
+    public function setInvoiceableByEmail(bool $invoiceableByEmail): void
     {
-        $this->invoiceableByEmail = (bool) $invoiceableByEmail;
+        $this->invoiceableByEmail = $invoiceableByEmail;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getInvoiceableByEmail()
+    public function getInvoiceableByEmail(): bool
     {
         return $this->invoiceableByEmail;
     }
 
-    /**
-     * @param boolean $invoiceableByFactr
-     */
-    public function setInvoiceableByFactr($invoiceableByFactr)
+    public function setInvoiceableByFactr(bool $invoiceableByFactr): void
     {
-        $this->invoiceableByFactr = (bool) $invoiceableByFactr;
+        $this->invoiceableByFactr = $invoiceableByFactr;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getInvoiceableByFactr()
+    public function getInvoiceableByFactr(): bool
     {
         return $this->invoiceableByFactr;
     }
 
-    /**
-     * @param boolean $invoiceableBySnailMail
-     */
-    public function setInvoiceableBySnailMail($invoiceableBySnailMail)
+    public function setInvoiceableBySnailMail(bool $invoiceableBySnailMail): void
     {
-        $this->invoiceableBySnailMail = (bool) $invoiceableBySnailMail;
+        $this->invoiceableBySnailMail = $invoiceableBySnailMail;
     }
 
-    /**
-     * @return boolean
-     */
-    public function getInvoiceableBySnailMail()
+    public function getInvoiceableBySnailMail(): bool
     {
         return $this->invoiceableBySnailMail;
     }
 
-    /**
-     * @param string $lastName
-     */
-    public function setLastName($lastName)
+    public function setLastName(string $lastName): void
     {
-        $this->lastName = (string) $lastName;
+        $this->lastName = $lastName;
     }
 
-    /**
-     * @return string
-     */
-    public function getLastName()
+    public function getLastName(): string
     {
         return $this->lastName;
     }
 
-    /**
-     * @param int $paymentDays
-     */
-    public function setPaymentDays($paymentDays)
+    public function setPaymentDays(int $paymentDays): void
     {
-        $this->paymentDays = (int) $paymentDays;
+        $this->paymentDays = $paymentDays;
     }
 
-    /**
-     * @return int
-     */
-    public function getPaymentDays()
+    public function getPaymentDays(): int
     {
         return $this->paymentDays;
     }
 
-    /**
-     * @param string $phone
-     */
-    public function setPhone($phone)
+    public function setPhone(string $phone): void
     {
-        $this->phone = (string) $phone;
+        $this->phone = $phone;
     }
 
-    /**
-     * @return string
-     */
-    public function getPhone()
+    public function getPhone(): string
     {
         return $this->phone;
     }
 
-    /**
-     * @param string $remarks
-     */
-    public function setRemarks($remarks)
+    public function setRemarks(string $remarks): void
     {
-        $this->remarks = (string) $remarks;
+        $this->remarks = $remarks;
     }
 
-    /**
-     * @return string
-     */
-    public function getRemarks()
+    public function getRemarks(): string
     {
         return $this->remarks;
     }
 
-    /**
-     * @param string $vat
-     */
-    public function setVat($vat)
+    public function setVat(string $vat): void
     {
-        $this->vat = (string) $vat;
+        $this->vat = $vat;
     }
 
-    /**
-     * @return string
-     */
-    public function getVat()
+    public function getVat(): string
     {
         return $this->vat;
     }
 
-    /**
-     * @param string $website
-     */
-    public function setWebsite($website)
+    public function setWebsite(string $website): void
     {
-        $this->website = (string) $website;
+        $this->website = $website;
     }
 
-    /**
-     * @return string
-     */
-    public function getWebsite()
+    public function getWebsite(): string
     {
         return $this->website;
     }
 
-    /**
-     * @return int
-     */
-    public function getReplacedById()
+    public function getReplacedById(): int
     {
         return $this->replacedById;
     }
 
-    /**
-     * @param int $replacedById
-     */
-    public function setReplacedById($replacedById)
+    public function setReplacedById(int $replacedById): void
     {
         $this->replacedById = $replacedById;
     }
 
-    public function isDisabled()
+    public function isDisabled(): bool
     {
         return $this->disabled;
     }
 
-    public function setDisabled($disabled = true)
+    public function setDisabled(bool $disabled = true): void
     {
         $this->disabled = $disabled;
     }
 
     /**
      * Initialize the object with raw data
-     *
-     * @param $data
-     * @return Client
      */
-    public static function initializeWithRawData($data)
+    public static function initializeWithRawData(array $data): Client
     {
         $item = new Client();
 
@@ -409,11 +297,8 @@ class Client
 
     /**
      * Converts the object into an array
-     *
-     * @param  bool[optional] $forApi Will the result be used in the API?
-     * @return array
      */
-    public function toArray($forApi = false)
+    public function toArray(bool $forApi = false): array
     {
         $data = array();
 
