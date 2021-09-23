@@ -9,6 +9,7 @@ use SumoCoders\Factr\Invoice\Invoice;
 use SumoCoders\Factr\Invoice\Mail;
 use SumoCoders\Factr\Invoice\Payment;
 use SumoCoders\Factr\Product\Product;
+use Exception;
 
 /**
  * Factr class
@@ -490,7 +491,7 @@ class Factr
     /**
      * Get the invoices for a client
      *
-     * @throws FactrException
+     * @throws Exception
      */
     public function clientsInvoices(int $id): array
     {
@@ -509,7 +510,7 @@ class Factr
     /**
      * Get a list of all the invoices.
      *
-     * @throws FactrException
+     * @throws Exception
      */
     public function invoices(?array $filters = null): array
     {
@@ -554,7 +555,7 @@ class Factr
      * Get all of the available information for a single invoice. You 'll need the id of the invoice.
      *
      * @return Invoice|bool
-     * @throws FactrException
+     * @throws Exception
      */
     public function invoicesGet(string $id)
     {
@@ -585,7 +586,7 @@ class Factr
      * Get all of the available information for a single invoice. You 'll need the iid of the invoice.
      *
      * @return Invoice|bool
-     * @throws FactrException
+     * @throws Exception
      */
     public function invoicesGetByIid(string $iid)
     {
@@ -598,7 +599,7 @@ class Factr
     /**
      * Create a new invoice.
      *
-     * @throws FactrException
+     * @throws Exception
      */
     public function invoicesCreate(Invoice $invoice): Invoice
     {
@@ -616,7 +617,7 @@ class Factr
     /**
      * Create a new credit note on invoice.
      *
-     * @throws FactrException
+     * @throws Exception
      */
     public function invoicesCreateCreditNote(string $id, Invoice $creditNote): Invoice
     {
@@ -693,7 +694,7 @@ class Factr
     /**
      * Adding a payment to an invoice.
      *
-     * @throws FactrException
+     * @throws Exception
      */
     public function invoicesAddPayment(string $id, Payment $payment): Payment
     {
