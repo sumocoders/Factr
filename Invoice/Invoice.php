@@ -535,7 +535,7 @@ class Invoice
             foreach ($this->getHistory() as $history) {
                 $data['history'][] = $history->toArray($forApi);
             }
-        } else {
+        } elseif ($this->prepareForSending) {
             $data['prepare_for_sending'] = $this->prepareForSending;
         }
 
