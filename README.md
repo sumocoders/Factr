@@ -1,4 +1,6 @@
-# Factr class
+# Factr class - Deprecated
+
+This package is deprecated. Use [DeFactuur](https://github.com/sumocoders/DeFactuur) instead.
 
 > Factr is an online invoicing web application
 
