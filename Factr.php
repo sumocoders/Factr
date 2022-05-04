@@ -222,7 +222,7 @@ class Factr
         }
 
         // error?
-        if($errorNumber != '') throw new Exception($errorMessage, $errorNumber);
+        if($errorNumber !== 0) throw new Exception($errorMessage, $errorNumber);
 
         // return the headers if needed
         if($returnHeaders) return $headers;
