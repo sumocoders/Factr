@@ -66,6 +66,11 @@ class Invoice
     protected $prepareForSending = false;
 
     /**
+     * @var int|null
+     */
+    protected $paymentDays;
+
+    /**
      * @param \SumoCoders\Factr\Client\Client $client
      */
     public function setClient(Client $client)
@@ -442,6 +447,26 @@ class Invoice
     }
 
     /**
+     * @return int|null
+     */
+    public function getPaymentDays()
+    {
+        return $this->paymentDays;
+    }
+
+    /**
+     * @param int $paymentDays
+     *
+     * @return self
+     */
+    public function setPaymentDays($paymentDays)
+    {
+        $this->paymentDays = $paymentDays;
+
+        return $this;
+    }
+
+    /**
      * Initialize the object with raw data
      *
      * @param $data
@@ -537,6 +562,7 @@ class Invoice
             }
         } elseif ($this->prepareForSending) {
             $data['prepare_for_sending'] = $this->prepareForSending;
+            $data['payment_days'] = $this->paymentDays;
         }
 
         return $data;
