@@ -563,6 +563,8 @@ class Invoice
         } elseif ($this->prepareForSending) {
             $data['prepare_for_sending'] = $this->prepareForSending;
             $data['payment_days'] = $this->paymentDays;
+        } else {
+            $data['payment_days'] = $this->paymentDays;
         }
 
         return $data;
